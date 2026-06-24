@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="fr" data-lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CTD — Cours Théologiques à Distance</title>
+    <link rel="shortcut icon" href="assets/ctd_logo.png" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ink: {
+                DEFAULT: "#1A1530",
+                70: "#4A4360",
+                40: "#8B85A0",
+              },
+              purple: {
+                50: "#F4EEF9",
+                100: "#E6D8F0",
+                300: "#A571C4",
+                500: "#6C2E91",
+                600: "#5A2579",
+                700: "#481D62",
+                900: "#2E1240",
+              },
+              azure: {
+                50: "#EAF2FA",
+                300: "#5C9BD6",
+                500: "#095CAC",
+                600: "#074B8C",
+                700: "#063A6C",
+              },
+              parchment: {
+                DEFAULT: "#FBF8F3",
+                deep: "#F3ECDE",
+              },
+              amber: {
+                DEFAULT: "#C98A3D",
+                light: "#DDA862",
+                dark: "#A86B26",
+              },
+            },
+            fontFamily: {
+              display: ["Fraunces", "Georgia", "serif"],
+              body: ["Inter", "system-ui", "sans-serif"],
+              mono: ["IBM Plex Mono", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        background: #fbf8f3;
+        color: #1a1530;
+      }
+      .font-display {
+        font-family: "Fraunces", Georgia, serif;
+      }
+      .font-mono {
+        font-family: "IBM Plex Mono", monospace;
+      }
+
+      /* Stitched divider — book-binding motif */
+      .stitch-divider {
+        position: relative;
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(26, 21, 48, 0.18) 12%,
+          rgba(26, 21, 48, 0.18) 88%,
+          transparent
+        );
+      }
+      .stitch-divider::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: repeating-linear-gradient(
+          to right,
+          rgba(26, 21, 48, 0.32) 0,
+          rgba(26, 21, 48, 0.32) 4px,
+          transparent 4px,
+          transparent 11px
+        );
+        height: 1px;
+        top: -3px;
+      }
+
+      .nav-link {
+        position: relative;
+        transition: color 0.2s;
+      }
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 0;
+        height: 1px;
+        background: #c98a3d;
+        transition: width 0.25s ease;
+      }
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 100%;
+      }
+      .nav-link.active {
+        color: #2e1240;
+      }
+
+      .lang-btn {
+        transition: all 0.2s;
+      }
+      .lang-btn.active {
+        background: #1a1530;
+        color: #fbf8f3;
+      }
+
+      /* Page-settle reveal: a gentle fold-open rather than plain slide */
+      .reveal {
+        opacity: 0;
+        transform: perspective(800px) rotateX(6deg) translateY(18px);
+        transform-origin: top center;
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease;
+      }
+      .reveal.show {
+        opacity: 1;
+        transform: perspective(800px) rotateX(0deg) translateY(0);
+      }
+
+      /* Open-book hero split */
+      .book-page {
+        position: relative;
+      }
+      .book-page::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 40px;
+        pointer-events: none;
+      }
+      .page-left::before {
+        right: 0;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(0, 0, 0, 0.18)
+        );
+      }
+      .page-right::before {
+        left: 0;
+        background: linear-gradient(
+          to left,
+          transparent,
+          rgba(0, 0, 0, 0.18)
+        );
+      }
+
+      .card-lift {
+        transition:
+          transform 0.3s cubic-bezier(0.22, 0.68, 0, 1.1),
+          box-shadow 0.3s;
+      }
+      .card-lift:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 34px rgba(46, 18, 64, 0.12);
+      }
+
+      .bg-paper-texture {
+        background-image: radial-gradient(
+            rgba(26, 21, 48, 0.025) 1px,
+            transparent 1px
+          ),
+          radial-gradient(rgba(26, 21, 48, 0.018) 1px, transparent 1px);
+        background-size: 26px 26px, 17px 17px;
+        background-position: 0 0, 8px 9px;
+      }
+
+      .eyebrow {
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 0.18em;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .reveal {
+          transition: none;
+          transform: none;
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body class="overflow-x-hidden">
+    <!-- ═══════════════════════════════════════
+       TOP BAR
+  ═══════════════════════════════════════ -->
+    <div
+      class="bg-ink text-parchment text-center py-2 px-4 font-mono text-[.68rem] tracking-[.12em] relative z-50"
+    >
+      <span
+        data-fr="Année académique 2026–2027 — candidatures ouvertes"
+        data-en="2026–2027 academic year — applications open"
+      >
+        Année académique 2026–2027 — candidatures ouvertes
+      </span>
+      <a href="inscription.html" class="underline text-amber-light ml-2"
+        data-fr="Candidater →" data-en="Apply →">Candidater →</a
+      >
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       NAVBAR
+  ═══════════════════════════════════════ -->
+    <nav
+      id="navbar"
+      class="sticky top-0 z-40 bg-parchment/95 backdrop-blur border-b border-ink/10 px-6 h-[72px] flex items-center justify-between transition-shadow duration-300"
+    >
+      <a href="index.html" class="flex items-center gap-3 flex-shrink-0">
+        <img src="assets/ctd_logo.png" class="h-11 w-auto" alt="CTD" />
+      </a>
+
+      <ul class="hidden lg:flex items-center list-none gap-8 h-[72px]">
+        <li>
+          <a
+            href="index.html"
+            class="nav-link active font-body text-[.85rem] font-medium text-ink h-[72px] flex items-center"
+            data-fr="Accueil"
+            data-en="Home"
+            >Accueil</a
+          >
+        </li>
+        <li>
+          <a
+            href="programmes.html"
+            class="nav-link font-body text-[.85rem] font-medium text-ink/75 h-[72px] flex items-center"
+            data-fr="Programmes"
+            data-en="Programs"
+            >Programmes</a
+          >
+        </li>
+        <li>
+          <a
+            href="inscription.html"
+            class="nav-link font-body text-[.85rem] font-medium text-ink/75 h-[72px] flex items-center"
+            data-fr="Inscription"
+            data-en="Admissions"
+            >Inscription</a
+          >
+        </li>
+        <li>
+          <a
+            href="contact.html"
+            class="nav-link font-body text-[.85rem] font-medium text-ink/75 h-[72px] flex items-center"
+            data-fr="Contact"
+            data-en="Contact"
+            >Contact</a
+          >
+        </li>
+      </ul>
+
+      <div class="flex items-center gap-3">
+        <div
+          class="flex rounded-full overflow-hidden border border-ink/15 bg-white/60"
+        >
+          <button
+            onclick="setLang('fr')"
+            class="lang-btn active font-mono text-[.65rem] font-semibold tracking-[.05em] px-3 py-1.5 text-ink/55 bg-transparent border-none cursor-pointer"
+          >
+            FR
+          </button>
+          <button
+            onclick="setLang('en')"
+            class="lang-btn font-mono text-[.65rem] font-semibold tracking-[.05em] px-3 py-1.5 text-ink/55 bg-transparent border-none cursor-pointer"
+          >
+            EN
+          </button>
+        </div>
+        <a
+          href="connexion.html"
+          class="hidden sm:inline-block font-body text-[.8rem] font-semibold px-4 py-2 border border-purple-500 text-purple-500 rounded-full hover:bg-purple-500 hover:text-white transition-colors duration-200"
+          data-fr="Connexion"
+          data-en="Login"
+          >Connexion</a
+        >
+        <button
+          onclick="toggleMenu()"
+          class="lg:hidden flex flex-col gap-[5px] p-1 bg-transparent border-none cursor-pointer"
+          aria-label="Menu"
+        >
+          <span class="block w-5 h-[2px] bg-ink rounded"></span>
+          <span class="block w-5 h-[2px] bg-ink rounded"></span>
+          <span class="block w-5 h-[2px] bg-ink rounded"></span>
+        </button>
+      </div>
+    </nav>
+
+    <div
+      id="mobileMenu"
+      class="hidden lg:hidden bg-parchment border-t border-ink/10 z-30 relative"
+    >
+      <a
+        href="index.html"
+        class="block font-body text-sm text-ink px-6 py-3 border-b border-ink/8"
+        data-fr="Accueil"
+        data-en="Home"
+        >Accueil</a
+      >
+      <a
+        href="programmes.html"
+        class="block font-body text-sm text-ink/75 px-6 py-3 border-b border-ink/8"
+        data-fr="Programmes"
+        data-en="Programs"
+        >Programmes</a
+      >
+      <a
+        href="inscription.html"
+        class="block font-body text-sm text-ink/75 px-6 py-3 border-b border-ink/8"
+        data-fr="Inscription"
+        data-en="Admissions"
+        >Inscription</a
+      >
+      <a
+        href="contact.html"
+        class="block font-body text-sm text-ink/75 px-6 py-3 border-b border-ink/8"
+        data-fr="Contact"
+        data-en="Contact"
+        >Contact</a
+      >
+      <a
+        href="connexion.html"
+        class="block font-body text-sm text-purple-500 font-semibold px-6 py-3"
+        data-fr="Connexion"
+        data-en="Login"
+        >Connexion</a
+      >
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       HERO — OPEN BOOK SPLIT
+  ═══════════════════════════════════════ -->
+    <section class="relative bg-paper-texture pt-16 pb-20 px-6 overflow-hidden">
+      <div class="max-w-6xl mx-auto">
+        <div class="flex items-center gap-2 mb-7 justify-center">
+          <span class="block w-8 h-px bg-amber"></span>
+          <span
+            class="eyebrow text-[.68rem] text-amber-dark"
+            data-fr="CTD · UN PÔLE DE FATECAM × AEC"
+            data-en="CTD · A FATECAM × AEC INITIATIVE"
+            >CTD · UN PÔLE DE FATECAM × AEC</span
+          >
+          <span class="block w-8 h-px bg-amber"></span>
+        </div>
+
+        <h1
+          class="font-display font-medium text-center leading-[1.08] mb-10"
+          style="font-size: clamp(2.4rem, 5.4vw, 4.6rem)"
+        >
+          <span
+            data-fr="La formation théologique,"
+            data-en="Theological training,"
+            >La formation théologique,</span
+          ><br />
+          <em
+            class="italic text-purple-500"
+            data-fr="ouverte à distance."
+            data-en="open at a distance."
+            >ouverte à distance.</em
+          >
+        </h1>
+
+        <!-- The open-book split: two pages, purple left / blue right -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden shadow-[0_24px_60px_rgba(46,18,64,0.18)] reveal"
+        >
+          <div
+            class="book-page page-left bg-purple-500 text-white px-9 py-12 md:py-14 flex flex-col justify-between"
+          >
+            <div>
+              <div
+                class="eyebrow text-[.66rem] text-purple-100 mb-4"
+                data-fr="POUR QUI"
+                data-en="WHO IT'S FOR"
+              >
+                POUR QUI
+              </div>
+              <p
+                class="font-display text-xl md:text-[1.4rem] leading-snug"
+                data-fr="Pasteurs, missionnaires, enseignants bibliques et leaders chrétiens d'Afrique francophone et de la diaspora."
+                data-en="Pastors, missionaries, Bible teachers and Christian leaders across francophone Africa and the diaspora."
+              >
+                Pasteurs, missionnaires, enseignants bibliques et leaders
+                chrétiens d'Afrique francophone et de la diaspora.
+              </p>
+            </div>
+            <a
+              href="programmes.html"
+              class="mt-8 inline-flex items-center gap-2 font-body text-sm font-semibold text-white/90 hover:text-white"
+              data-fr="Découvrir nos programmes →"
+              data-en="Discover our programs →"
+              >Découvrir nos programmes →</a
+            >
+          </div>
+          <div
+            class="book-page page-right bg-azure-500 text-white px-9 py-12 md:py-14 flex flex-col justify-between"
+          >
+            <div>
+              <div
+                class="eyebrow text-[.66rem] text-azure-50 mb-4"
+                data-fr="COMMENT"
+                data-en="HOW"
+              >
+                COMMENT
+              </div>
+              <p
+                class="font-display text-xl md:text-[1.4rem] leading-snug"
+                data-fr="Cours audio, vidéo et lectures guidées — sans quitter votre église, votre famille ou votre ministère."
+                data-en="Audio courses, video and guided readings — without leaving your church, family or ministry."
+              >
+                Cours audio, vidéo et lectures guidées — sans quitter votre
+                église, votre famille ou votre ministère.
+              </p>
+            </div>
+            <a
+              href="inscription.html"
+              class="mt-8 inline-flex items-center gap-2 font-body text-sm font-semibold text-white/90 hover:text-white"
+              data-fr="Déposer une candidature →"
+              data-en="Submit an application →"
+              >Déposer une candidature →</a
+            >
+          </div>
+        </div>
+
+        <div class="flex justify-center mt-8">
+          <a
+            href="programmes.html#calendrier"
+            class="font-body text-[.82rem] font-semibold px-7 py-3 rounded-full border border-ink/20 text-ink/80 hover:border-ink/40 hover:text-ink transition-colors"
+            data-fr="Voir le calendrier académique"
+            data-en="View the academic calendar"
+            >Voir le calendrier académique</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <div class="stitch-divider max-w-6xl mx-auto"></div>
+
+    <!-- ═══════════════════════════════════════
+       QUI NOUS SOMMES
+  ═══════════════════════════════════════ -->
+    <section class="py-24 px-6">
+      <div
+        class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-14 items-start"
+      >
+        <div class="reveal">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="block w-7 h-px bg-amber"></span>
+            <span
+              class="eyebrow text-[.68rem] text-amber-dark"
+              data-fr="QUI NOUS SOMMES"
+              data-en="WHO WE ARE"
+              >QUI NOUS SOMMES</span
+            >
+          </div>
+          <h2
+            class="font-display font-medium leading-[1.15] mb-2"
+            style="font-size: clamp(1.9rem, 3.2vw, 2.7rem)"
+          >
+            <span data-fr="Un pôle de" data-en="A pole of">Un pôle de</span>
+            <em class="italic text-azure-500" data-fr=" formation" data-en=" training">
+              formation</em
+            ><br />
+            <span data-fr="contextuelle et rigoureuse." data-en="that is contextual and rigorous.">
+              contextuelle et rigoureuse.</span
+            >
+          </h2>
+        </div>
+
+        <div class="reveal" style="transition-delay: 0.08s">
+          <p
+            class="text-ink/80 leading-[1.85] mb-5"
+            style="font-size: 1rem"
+            data-fr="Le pôle CTD est un espace dédié à la formation des pasteurs, des missionnaires, des enseignants bibliques et des leaders chrétiens à travers l'Afrique francophone et la diaspora. Créé par la Faculté Autonome de Théologie Évangélique du Cameroun (FATECAM) en partenariat avec l'Alliance des Évangéliques du Cameroun (AEC), il accueille et sert les étudiants et les enseignants dans l'unité et la diversité évangéliques."
+            data-en="CTD is a space dedicated to training pastors, missionaries, Bible teachers and Christian leaders across francophone Africa and the diaspora. Created by the Autonomous Faculty of Evangelical Theology of Cameroon (FATECAM) in partnership with the Evangelical Alliance of Cameroon (AEC), it welcomes and serves students and teachers in evangelical unity and diversity."
+          >
+            Le pôle CTD est un espace dédié à la formation des pasteurs, des
+            missionnaires, des enseignants bibliques et des leaders chrétiens
+            à travers l'Afrique francophone et la diaspora. Créé par la
+            Faculté Autonome de Théologie Évangélique du Cameroun (FATECAM)
+            en partenariat avec l'Alliance des Évangéliques du Cameroun
+            (AEC), il accueille et sert les étudiants et les enseignants
+            dans l'unité et la diversité évangéliques.
+          </p>
+          <p
+            class="text-ink/70 leading-[1.85]"
+            style="font-size: 0.94rem"
+            data-fr="Il répond à la nécessité de rendre la formation théologique accessible aux hommes et aux femmes engagés dans le ministère, même lorsqu'ils ne peuvent pas intégrer un campus résidentiel. Nos cours combinent l'exigence académique, la fidélité biblique et la flexibilité pédagogique afin de répondre aux défis actuels de la mission, de l'Église et du leadership chrétien."
+            data-en="It answers the need to make theological training accessible to men and women engaged in ministry, even when they cannot join a residential campus. Our courses combine academic rigor, biblical faithfulness and pedagogical flexibility to meet the current challenges of mission, Church and Christian leadership."
+          >
+            Il répond à la nécessité de rendre la formation théologique
+            accessible aux hommes et aux femmes engagés dans le ministère,
+            même lorsqu'ils ne peuvent pas intégrer un campus résidentiel.
+            Nos cours combinent l'exigence académique, la fidélité biblique
+            et la flexibilité pédagogique afin de répondre aux défis actuels
+            de la mission, de l'Église et du leadership chrétien.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div class="stitch-divider max-w-6xl mx-auto"></div>
+
+    <!-- ═══════════════════════════════════════
+       PROGRAMMES — APERÇU
+  ═══════════════════════════════════════ -->
+    <section class="py-24 px-6 bg-purple-50/60">
+      <div class="max-w-6xl mx-auto">
+        <div class="flex items-end justify-between flex-wrap gap-4 mb-12 reveal">
+          <div>
+            <div class="flex items-center gap-2 mb-4">
+              <span class="block w-7 h-px bg-amber"></span>
+              <span
+                class="eyebrow text-[.68rem] text-amber-dark"
+                data-fr="NOS PROGRAMMES"
+                data-en="OUR PROGRAMS"
+                >NOS PROGRAMMES</span
+              >
+            </div>
+            <h2
+              class="font-display font-medium leading-[1.15]"
+              style="font-size: clamp(1.9rem, 3.2vw, 2.7rem)"
+            >
+              <span data-fr="Trois chemins, une même" data-en="Three paths, one shared">
+                Trois chemins, une même</span
+              >
+              <em class="italic text-purple-500" data-fr=" vocation." data-en=" calling.">
+                vocation.</em
+              >
+            </h2>
+          </div>
+          <a
+            href="programmes.html"
+            class="font-body text-sm font-semibold text-azure-500 hover:text-azure-700 whitespace-nowrap"
+            data-fr="Tous les programmes →"
+            data-en="All programs →"
+            >Tous les programmes →</a
+          >
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Licence -->
+          <div
+            class="card-lift bg-white rounded-2xl p-8 border border-ink/8 reveal"
+          >
+            <div
+              class="font-mono text-[.68rem] text-azure-500 mb-5 tracking-[.1em]"
+            >
+              01 — 3 ANS
+            </div>
+            <h3
+              class="font-display font-medium text-xl mb-3 leading-snug"
+              data-fr="Licence en Théologie à distance"
+              data-en="Distance Bachelor's in Theology"
+            >
+              Licence en Théologie à distance
+            </h3>
+            <p
+              class="text-ink/70 leading-[1.75] mb-6"
+              style="font-size: 0.88rem"
+              data-fr="Une base solide en disciplines bibliques, théologiques, pastorales et missionnaires sur trois années académiques."
+              data-en="A solid foundation in biblical, theological, pastoral and missionary disciplines over three academic years."
+            >
+              Une base solide en disciplines bibliques, théologiques,
+              pastorales et missionnaires sur trois années académiques.
+            </p>
+            <a
+              href="programmes.html#licence"
+              class="font-body text-[.82rem] font-semibold text-purple-500 hover:text-purple-700"
+              data-fr="En savoir plus →"
+              data-en="Learn more →"
+              >En savoir plus →</a
+            >
+          </div>
+
+          <!-- Master -->
+          <div
+            class="card-lift bg-white rounded-2xl p-8 border border-ink/8 reveal"
+            style="transition-delay: 0.08s"
+          >
+            <div
+              class="font-mono text-[.68rem] text-azure-500 mb-5 tracking-[.1em]"
+            >
+              02 — 2 ANS
+            </div>
+            <h3
+              class="font-display font-medium text-xl mb-3 leading-snug"
+              data-fr="Master 2 Professionnel à distance"
+              data-en="Distance Professional Master's"
+            >
+              Master 2 Professionnel à distance
+            </h3>
+            <p
+              class="text-ink/70 leading-[1.75] mb-6"
+              style="font-size: 0.88rem"
+              data-fr="Théologie pastorale ou implantation d'Églises — deux parcours de spécialisation pour leaders expérimentés."
+              data-en="Pastoral theology or church planting — two specialization tracks for experienced leaders."
+            >
+              Théologie pastorale ou implantation d'Églises — deux parcours
+              de spécialisation pour leaders expérimentés.
+            </p>
+            <a
+              href="programmes.html#master"
+              class="font-body text-[.82rem] font-semibold text-purple-500 hover:text-purple-700"
+              data-fr="En savoir plus →"
+              data-en="Learn more →"
+              >En savoir plus →</a
+            >
+          </div>
+
+          <!-- Formation continue -->
+          <div
+            class="card-lift bg-white rounded-2xl p-8 border border-ink/8 reveal"
+            style="transition-delay: 0.16s"
+          >
+            <div
+              class="font-mono text-[.68rem] text-azure-500 mb-5 tracking-[.1em]"
+            >
+              03 — MODULAIRE
+            </div>
+            <h3
+              class="font-display font-medium text-xl mb-3 leading-snug"
+              data-fr="Formation continue à distance"
+              data-en="Distance Continuing Education"
+            >
+              Formation continue à distance
+            </h3>
+            <p
+              class="text-ink/70 leading-[1.75] mb-6"
+              style="font-size: 0.88rem"
+              data-fr="Modules pratiques et certifiés : accompagnement pastoral, guérison de traumatisme, islamologie appliquée."
+              data-en="Practical, certified modules: pastoral care, trauma healing, applied Islamology."
+            >
+              Modules pratiques et certifiés : accompagnement pastoral,
+              guérison de traumatisme, islamologie appliquée.
+            </p>
+            <a
+              href="programmes.html#continue"
+              class="font-body text-[.82rem] font-semibold text-purple-500 hover:text-purple-700"
+              data-fr="En savoir plus →"
+              data-en="Learn more →"
+              >En savoir plus →</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       COMMENT ÇA MARCHE — PROCESS
+  ═══════════════════════════════════════ -->
+    <section class="py-24 px-6">
+      <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-16 reveal">
+          <div class="flex items-center justify-center gap-2 mb-4">
+            <span class="block w-7 h-px bg-amber"></span>
+            <span
+              class="eyebrow text-[.68rem] text-amber-dark"
+              data-fr="LE PARCOURS D'ADMISSION"
+              data-en="THE ADMISSIONS JOURNEY"
+              >LE PARCOURS D'ADMISSION</span
+            >
+            <span class="block w-7 h-px bg-amber"></span>
+          </div>
+          <h2
+            class="font-display font-medium leading-[1.15]"
+            style="font-size: clamp(1.9rem, 3.2vw, 2.7rem)"
+          >
+            <span data-fr="Cinq étapes vous séparent de" data-en="Five steps stand between you and">
+              Cinq étapes vous séparent de</span
+            >
+            <em class="italic text-azure-500" data-fr=" votre première classe." data-en=" your first class.">
+              votre première classe.</em
+            >
+          </h2>
+        </div>
+
+        <div
+          class="grid grid-cols-1 md:grid-cols-5 gap-0 md:gap-4 relative"
+        >
+          <!-- connecting stitched line on desktop -->
+          <div
+            class="hidden md:block absolute top-6 left-0 right-0 h-px stitch-divider"
+            style="margin: 0 10%"
+          ></div>
+
+          <!-- Step 1 -->
+          <div class="reveal text-center relative px-2">
+            <div
+              class="w-12 h-12 rounded-full bg-ink text-parchment font-mono text-sm flex items-center justify-center mx-auto mb-4 relative z-10"
+            >
+              1
+            </div>
+            <h4
+              class="font-body font-semibold text-sm mb-1.5"
+              data-fr="Créer son compte"
+              data-en="Create an account"
+            >
+              Créer son compte
+            </h4>
+            <p
+              class="text-ink/60 leading-snug"
+              style="font-size: 0.78rem"
+              data-fr="Compte étudiant sur la plateforme"
+              data-en="Student account on the platform"
+            >
+              Compte étudiant sur la plateforme
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="reveal text-center relative px-2" style="transition-delay: 0.06s">
+            <div
+              class="w-12 h-12 rounded-full bg-ink text-parchment font-mono text-sm flex items-center justify-center mx-auto mb-4 relative z-10"
+            >
+              2
+            </div>
+            <h4
+              class="font-body font-semibold text-sm mb-1.5"
+              data-fr="Remplir la candidature"
+              data-en="Fill the application"
+            >
+              Remplir la candidature
+            </h4>
+            <p
+              class="text-ink/60 leading-snug"
+              style="font-size: 0.78rem"
+              data-fr="Formulaire de candidature complet"
+              data-en="Complete application form"
+            >
+              Formulaire de candidature complet
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="reveal text-center relative px-2" style="transition-delay: 0.12s">
+            <div
+              class="w-12 h-12 rounded-full bg-ink text-parchment font-mono text-sm flex items-center justify-center mx-auto mb-4 relative z-10"
+            >
+              3
+            </div>
+            <h4
+              class="font-body font-semibold text-sm mb-1.5"
+              data-fr="Téléverser les documents"
+              data-en="Upload documents"
+            >
+              Téléverser les documents
+            </h4>
+            <p
+              class="text-ink/60 leading-snug"
+              style="font-size: 0.78rem"
+              data-fr="Pièce d'identité, diplômes, recommandation"
+              data-en="ID, diplomas, recommendation"
+            >
+              Pièce d'identité, diplômes, recommandation
+            </p>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="reveal text-center relative px-2" style="transition-delay: 0.18s">
+            <div
+              class="w-12 h-12 rounded-full bg-ink text-parchment font-mono text-sm flex items-center justify-center mx-auto mb-4 relative z-10"
+            >
+              4
+            </div>
+            <h4
+              class="font-body font-semibold text-sm mb-1.5"
+              data-fr="Payer les frais"
+              data-en="Pay the fees"
+            >
+              Payer les frais
+            </h4>
+            <p
+              class="text-ink/60 leading-snug"
+              style="font-size: 0.78rem"
+              data-fr="Frais d'inscription en ligne"
+              data-en="Registration fees online"
+            >
+              Frais d'inscription en ligne
+            </p>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="reveal text-center relative px-2" style="transition-delay: 0.24s">
+            <div
+              class="w-12 h-12 rounded-full bg-amber text-white font-mono text-sm flex items-center justify-center mx-auto mb-4 relative z-10"
+            >
+              5
+            </div>
+            <h4
+              class="font-body font-semibold text-sm mb-1.5"
+              data-fr="Recevoir la confirmation"
+              data-en="Receive confirmation"
+            >
+              Recevoir la confirmation
+            </h4>
+            <p
+              class="text-ink/60 leading-snug"
+              style="font-size: 0.78rem"
+              data-fr="Confirmation académique officielle"
+              data-en="Official academic confirmation"
+            >
+              Confirmation académique officielle
+            </p>
+          </div>
+        </div>
+
+        <div class="text-center mt-12 reveal">
+          <a
+            href="inscription.html"
+            class="inline-flex items-center gap-2 font-body text-[.85rem] font-bold px-8 py-3.5 bg-amber text-white rounded-full hover:bg-amber-dark transition-colors duration-300"
+            data-fr="Commencer ma candidature"
+            data-en="Start my application"
+            >Commencer ma candidature</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <div class="stitch-divider max-w-6xl mx-auto"></div>
+
+    <!-- ═══════════════════════════════════════
+       CITATION / ANCRAGE
+  ═══════════════════════════════════════ -->
+    <section class="py-24 px-6 bg-ink text-parchment relative overflow-hidden">
+      <div
+        class="absolute inset-0 opacity-[0.04] pointer-events-none"
+        style="
+          background-image: repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 18px,
+            #fff 18px,
+            #fff 19px
+          );
+        "
+      ></div>
+      <div class="max-w-3xl mx-auto text-center relative z-10 reveal">
+        <div class="font-display text-5xl text-amber mb-4 leading-none">
+          &ldquo;
+        </div>
+        <p
+          class="font-display font-medium leading-[1.4] mb-6"
+          style="font-size: clamp(1.4rem, 2.6vw, 1.9rem)"
+          data-fr="Former pour transformer : équiper des serviteurs enracinés dans les Écritures pour l'Église contemporaine."
+          data-en="Train to transform: equipping servants rooted in Scripture for the contemporary Church."
+        >
+          Former pour transformer : équiper des serviteurs enracinés dans
+          les Écritures pour l'Église contemporaine.
+        </p>
+        <div
+          class="eyebrow text-[.68rem] text-parchment/50"
+          data-fr="DEVISE DU PÔLE CTD"
+          data-en="MOTTO OF THE CTD POLE"
+        >
+          DEVISE DU PÔLE CTD
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       CTA FINAL
+  ═══════════════════════════════════════ -->
+    <section class="py-24 px-6 bg-paper-texture">
+      <div class="max-w-4xl mx-auto text-center reveal">
+        <h2
+          class="font-display font-medium leading-[1.15] mb-5"
+          style="font-size: clamp(2rem, 3.6vw, 3.1rem)"
+        >
+          <span data-fr="Votre ministère ne doit pas" data-en="Your ministry shouldn't have to">
+            Votre ministère ne doit pas</span
+          ><br />
+          <em class="italic text-purple-500" data-fr="attendre votre déménagement." data-en="wait for you to relocate.">
+            attendre votre déménagement.</em
+          >
+        </h2>
+        <p
+          class="text-ink/70 leading-relaxed mb-9 max-w-xl mx-auto"
+          style="font-size: 0.96rem"
+          data-fr="Rejoignez une communauté de pasteurs, de missionnaires et de leaders qui se forment sans quitter leur terrain de service."
+          data-en="Join a community of pastors, missionaries and leaders training without leaving their field of service."
+        >
+          Rejoignez une communauté de pasteurs, de missionnaires et de
+          leaders qui se forment sans quitter leur terrain de service.
+        </p>
+        <div class="flex gap-3 justify-center flex-wrap">
+          <a
+            href="inscription.html"
+            class="font-body text-[.85rem] font-bold px-8 py-3.5 bg-purple-500 text-white rounded-full hover:bg-purple-700 transition-colors duration-300"
+            data-fr="Déposer une candidature"
+            data-en="Submit an application"
+            >Déposer une candidature</a
+          >
+          <a
+            href="contact.html"
+            class="font-body text-[.85rem] font-semibold px-8 py-3.5 border border-ink/25 text-ink rounded-full hover:border-ink/50 transition-colors duration-300"
+            data-fr="Parler à un conseiller"
+            data-en="Speak with an advisor"
+            >Parler à un conseiller</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════ -->
+    <footer class="bg-purple-900 text-parchment/70 px-6 pt-16 pb-8">
+      <div class="max-w-6xl mx-auto">
+        <div
+          class="grid grid-cols-1 md:grid-cols-[1.3fr_1fr_1fr_1fr] gap-10 pb-12"
+        >
+          <div>
+            <img
+              src="assets/ctd_logo.png"
+              class="h-10 w-auto mb-4 brightness-0 invert opacity-90"
+              alt="CTD"
+            />
+            <p
+              class="leading-relaxed max-w-xs"
+              style="font-size: 0.85rem"
+              data-fr="Le pôle CTD forme des serviteurs de Dieu pour une Église solide, fidèle aux Écritures et engagée dans la mission."
+              data-en="The CTD pole trains servants of God for a Church that is strong, faithful to Scripture and engaged in mission."
+            >
+              Le pôle CTD forme des serviteurs de Dieu pour une Église
+              solide, fidèle aux Écritures et engagée dans la mission.
+            </p>
+          </div>
+          <div>
+            <div
+              class="eyebrow text-[.65rem] text-parchment/40 mb-4"
+              data-fr="NAVIGATION"
+              data-en="NAVIGATION"
+            >
+              NAVIGATION
+            </div>
+            <ul class="space-y-2.5" style="font-size: 0.85rem">
+              <li><a href="index.html" class="hover:text-amber-light" data-fr="Accueil" data-en="Home">Accueil</a></li>
+              <li><a href="programmes.html" class="hover:text-amber-light" data-fr="Programmes" data-en="Programs">Programmes</a></li>
+              <li><a href="inscription.html" class="hover:text-amber-light" data-fr="Inscription" data-en="Admissions">Inscription</a></li>
+              <li><a href="contact.html" class="hover:text-amber-light" data-fr="Contact" data-en="Contact">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <div
+              class="eyebrow text-[.65rem] text-parchment/40 mb-4"
+              data-fr="ESPACE ÉTUDIANT"
+              data-en="STUDENT SPACE"
+            >
+              ESPACE ÉTUDIANT
+            </div>
+            <ul class="space-y-2.5" style="font-size: 0.85rem">
+              <li><a href="connexion.html" class="hover:text-amber-light" data-fr="Connexion" data-en="Login">Connexion</a></li>
+              <li><a href="paiement.html" class="hover:text-amber-light" data-fr="Paiement" data-en="Payment">Paiement</a></li>
+            </ul>
+          </div>
+          <div>
+            <div
+              class="eyebrow text-[.65rem] text-parchment/40 mb-4"
+              data-fr="CONTACT"
+              data-en="CONTACT"
+            >
+              CONTACT
+            </div>
+            <ul class="space-y-2.5" style="font-size: 0.85rem">
+              <li>B.P. 701 Ngaoundéré, Adamaoua</li>
+              <li>contact@pctd.net</li>
+              <li>www.pctd.net</li>
+            </ul>
+          </div>
+        </div>
+
+        <div
+          class="border-t border-white/10 pt-8 pb-2 flex flex-col md:flex-row items-center justify-between gap-6"
+        >
+          <div
+            class="eyebrow text-[.62rem] text-parchment/35"
+            data-fr="EN PARTENARIAT AVEC"
+            data-en="IN PARTNERSHIP WITH"
+          >
+            EN PARTENARIAT AVEC
+          </div>
+          <div class="flex items-center gap-6 flex-wrap justify-center">
+            <span class="font-display text-lg text-parchment/60">FATECAM</span>
+            <span class="font-display text-lg text-parchment/60">AEC</span>
+            <span class="font-display text-lg text-parchment/60">WAM</span>
+            <span class="font-display text-lg text-parchment/60">FJC</span>
+          </div>
+        </div>
+
+        <div
+          class="text-center pt-6 font-mono text-[.68rem] text-parchment/35"
+        >
+          © 2026 CTD, FATECAM / AEC. Tous droits réservés.
+        </div>
+      </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════
+       SCRIPTS
+  ═══════════════════════════════════════ -->
+    <script>
+      function setLang(l) {
+        document
+          .querySelectorAll(".lang-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector(`.lang-btn[onclick="setLang('${l}')"]`)
+          .classList.add("active");
+        document.querySelectorAll("[data-fr]").forEach((el) => {
+          const txt = el.getAttribute("data-" + l);
+          if (txt) el.textContent = txt;
+        });
+      }
+
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("show");
+              obs.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.12 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+
+      window.addEventListener("scroll", () => {
+        document.getElementById("navbar").style.boxShadow =
+          window.pageYOffset > 60 ? "0 2px 24px rgba(26,21,48,.08)" : "none";
+      });
+
+      function toggleMenu() {
+        document.getElementById("mobileMenu").classList.toggle("hidden");
+      }
+    </script>
+  </body>
+</html>
