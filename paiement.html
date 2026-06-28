@@ -1,0 +1,857 @@
+<!doctype html>
+<html lang="fr" data-lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CTD — Paiement</title>
+    <link rel="shortcut icon" href="assets/ctd_logo.png" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ink: { DEFAULT: "#1A1530", 70: "#4A4360", 40: "#8B85A0" },
+              purple: {
+                50: "#F4EEF9",
+                100: "#E6D8F0",
+                300: "#A571C4",
+                500: "#6C2E91",
+                600: "#5A2579",
+                700: "#481D62",
+                900: "#2E1240",
+              },
+              azure: {
+                50: "#EAF2FA",
+                300: "#5C9BD6",
+                500: "#095CAC",
+                600: "#074B8C",
+                700: "#063A6C",
+              },
+              parchment: { DEFAULT: "#FBF8F3", deep: "#F3ECDE" },
+              amber: { DEFAULT: "#C98A3D", light: "#DDA862", dark: "#A86B26" },
+            },
+            fontFamily: {
+              display: ["Fraunces", "Georgia", "serif"],
+              body: ["Inter", "system-ui", "sans-serif"],
+              mono: ["IBM Plex Mono", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        background: #fbf8f3;
+        color: #1a1530;
+      }
+      .font-display {
+        font-family: "Fraunces", Georgia, serif;
+      }
+      .font-mono {
+        font-family: "IBM Plex Mono", monospace;
+      }
+
+      .stitch-divider {
+        position: relative;
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(26, 21, 48, 0.18) 12%,
+          rgba(26, 21, 48, 0.18) 88%,
+          transparent
+        );
+      }
+      .stitch-divider::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: repeating-linear-gradient(
+          to right,
+          rgba(26, 21, 48, 0.32) 0,
+          rgba(26, 21, 48, 0.32) 4px,
+          transparent 4px,
+          transparent 11px
+        );
+        height: 1px;
+        top: -3px;
+      }
+
+      .nav-link {
+        position: relative;
+        transition: color 0.2s;
+      }
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 0;
+        height: 1px;
+        background: #c98a3d;
+        transition: width 0.25s ease;
+      }
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 100%;
+      }
+      .nav-link.active {
+        color: #2e1240;
+      }
+
+      .lang-btn {
+        transition: all 0.2s;
+      }
+      .lang-btn.active {
+        background: #1a1530;
+        color: #fbf8f3;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: perspective(800px) rotateX(6deg) translateY(18px);
+        transform-origin: top center;
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease;
+      }
+      .reveal.show {
+        opacity: 1;
+        transform: perspective(800px) rotateX(0deg) translateY(0);
+      }
+
+      .bg-paper-texture {
+        background-image: radial-gradient(
+            rgba(26, 21, 48, 0.025) 1px,
+            transparent 1px
+          ),
+          radial-gradient(rgba(26, 21, 48, 0.018) 1px, transparent 1px);
+        background-size: 26px 26px, 17px 17px;
+        background-position: 0 0, 8px 9px;
+      }
+
+      .eyebrow {
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 0.18em;
+      }
+
+      .field-input {
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .field-input:focus {
+        border-color: #6c2e91;
+        box-shadow: 0 0 0 3px rgba(108, 46, 145, 0.12);
+      }
+
+      .method-card {
+        transition:
+          transform 0.25s cubic-bezier(0.22, 0.68, 0, 1.1),
+          box-shadow 0.25s,
+          border-color 0.25s;
+        cursor: pointer;
+      }
+      .method-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 28px rgba(46, 18, 64, 0.1);
+      }
+      .method-card.selected {
+        border-color: #6c2e91;
+        background: #f4eef9;
+      }
+      .method-card.selected .method-radio {
+        border-color: #6c2e91;
+        background: #6c2e91;
+      }
+      .method-radio {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid #d4d0e0;
+        transition: all 0.2s;
+      }
+
+      .rubric-tab {
+        transition: all 0.2s;
+      }
+      .rubric-tab.active {
+        background: #1a1530;
+        color: #fbf8f3;
+      }
+
+      #toast {
+        transform: translateY(20px);
+        opacity: 0;
+        transition:
+          transform 0.35s ease,
+          opacity 0.35s ease;
+        pointer-events: none;
+      }
+      #toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .reveal {
+          transition: none;
+          transform: none;
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body class="overflow-x-hidden">
+    <!-- ═══════════════════════════════════════
+       TOP BAR
+  ═══════════════════════════════════════ -->
+    <div
+      class="bg-ink text-parchment text-center py-2 px-4 font-mono text-[.68rem] tracking-[.12em] relative z-50"
+    >
+      <span
+        data-fr="Année académique 2026–2027 — candidatures ouvertes"
+        data-en="2026–2027 academic year — applications open"
+      >
+        Année académique 2026–2027 — candidatures ouvertes
+      </span>
+      <a
+        href="inscription.html"
+        class="underline text-amber-light ml-2"
+        data-fr="Candidater →"
+        data-en="Apply →"
+        >Candidater →</a
+      >
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       NAVBAR
+  ═══════════════════════════════════════ -->
+    <nav
+      id="navbar"
+      class="sticky top-0 z-40 bg-parchment/95 backdrop-blur border-b border-ink/10 px-6 h-[72px] flex items-center justify-between transition-shadow duration-300"
+    >
+      <a href="index.html" class="flex items-center gap-3 flex-shrink-0">
+        <img src="assets/ctd_logo.png" class="h-11 w-auto" alt="CTD" />
+      </a>
+
+      <ul class="hidden lg:flex items-center list-none gap-8 h-[72px]">
+        <li>
+          <a
+            href="index.html"
+            class="nav-link font-body text-[.85rem] font-medium text-ink/75 h-[72px] flex items-center"
+            data-fr="Accueil"
+            data-en="Home"
+            >Accueil</a
+          >
+        </li>
+        <li>
+          <a
+            href="programmes.html"
+            class="nav-link font-body text-[.85rem] font-medium text-ink/75 h-[72px] flex items-center"
+            data-fr="Programmes"
+            data-en="Programs"
+            >Programmes</a
+          >
+        </li>
+        <li>
+          <a
+            href="inscription.html"
+            class="nav-link font-body text-[.85rem] font-medium text-ink/75 h-[72px] flex items-center"
+            data-fr="Inscription"
+            data-en="Admissions"
+            >Inscription</a
+          >
+        </li>
+        <li>
+          <a
+            href="contact.html"
+            class="nav-link font-body text-[.85rem] font-medium text-ink/75 h-[72px] flex items-center"
+            data-fr="Contact"
+            data-en="Contact"
+            >Contact</a
+          >
+        </li>
+      </ul>
+
+      <div class="flex items-center gap-3">
+        <div
+          class="flex rounded-full overflow-hidden border border-ink/15 bg-white/60"
+        >
+          <button
+            onclick="setLang('fr')"
+            class="lang-btn active font-mono text-[.65rem] font-semibold tracking-[.05em] px-3 py-1.5 text-ink/55 bg-transparent border-none cursor-pointer"
+          >
+            FR
+          </button>
+          <button
+            onclick="setLang('en')"
+            class="lang-btn font-mono text-[.65rem] font-semibold tracking-[.05em] px-3 py-1.5 text-ink/55 bg-transparent border-none cursor-pointer"
+          >
+            EN
+          </button>
+        </div>
+        <a
+          href="connexion.html"
+          class="hidden sm:inline-block font-body text-[.8rem] font-semibold px-4 py-2 border border-purple-500 text-purple-500 rounded-full hover:bg-purple-500 hover:text-white transition-colors duration-200"
+          data-fr="Connexion"
+          data-en="Login"
+          >Connexion</a
+        >
+        <button
+          onclick="toggleMenu()"
+          class="lg:hidden flex flex-col gap-[5px] p-1 bg-transparent border-none cursor-pointer"
+          aria-label="Menu"
+        >
+          <span class="block w-5 h-[2px] bg-ink rounded"></span>
+          <span class="block w-5 h-[2px] bg-ink rounded"></span>
+          <span class="block w-5 h-[2px] bg-ink rounded"></span>
+        </button>
+      </div>
+    </nav>
+
+    <div
+      id="mobileMenu"
+      class="hidden lg:hidden bg-parchment border-t border-ink/10 z-30 relative"
+    >
+      <a
+        href="index.html"
+        class="block font-body text-sm text-ink/75 px-6 py-3 border-b border-ink/8"
+        data-fr="Accueil"
+        data-en="Home"
+        >Accueil</a
+      >
+      <a
+        href="programmes.html"
+        class="block font-body text-sm text-ink/75 px-6 py-3 border-b border-ink/8"
+        data-fr="Programmes"
+        data-en="Programs"
+        >Programmes</a
+      >
+      <a
+        href="inscription.html"
+        class="block font-body text-sm text-ink/75 px-6 py-3 border-b border-ink/8"
+        data-fr="Inscription"
+        data-en="Admissions"
+        >Inscription</a
+      >
+      <a
+        href="contact.html"
+        class="block font-body text-sm text-ink/75 px-6 py-3 border-b border-ink/8"
+        data-fr="Contact"
+        data-en="Contact"
+        >Contact</a
+      >
+      <a
+        href="connexion.html"
+        class="block font-body text-sm text-purple-500 font-semibold px-6 py-3"
+        data-fr="Connexion"
+        data-en="Login"
+        >Connexion</a
+      >
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════ -->
+    <section class="bg-paper-texture pt-16 pb-14 px-6">
+      <div class="max-w-3xl mx-auto text-center">
+        <div class="flex items-center gap-2 mb-6 justify-center">
+          <span class="block w-8 h-px bg-amber"></span>
+          <span
+            class="eyebrow text-[.68rem] text-amber-dark"
+            data-fr="ESPACE PAIEMENT"
+            data-en="PAYMENT SPACE"
+            >ESPACE PAIEMENT</span
+          >
+          <span class="block w-8 h-px bg-amber"></span>
+        </div>
+        <h1
+          class="font-display font-medium leading-[1.1] mb-5"
+          style="font-size: clamp(2.2rem, 4.6vw, 3.8rem)"
+        >
+          <span data-fr="Vos paiements," data-en="Your payments,">Vos paiements,</span>
+          <em class="italic text-purple-500" data-fr="en toute simplicité." data-en="made simple.">
+            en toute simplicité.</em
+          >
+        </h1>
+        <p
+          class="text-ink/70 leading-relaxed max-w-xl mx-auto"
+          style="font-size: 0.96rem"
+          data-fr="Effectuez vos paiements académiques sécurisés et en toute simplicité, où que vous soyez."
+          data-en="Make your academic payments securely and simply, wherever you are."
+        >
+          Effectuez vos paiements académiques sécurisés et en toute
+          simplicité, où que vous soyez.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       PAYMENT FORM
+  ═══════════════════════════════════════ -->
+    <section class="py-16 px-6">
+      <div class="max-w-3xl mx-auto">
+        <form
+          id="paymentForm"
+          onsubmit="submitPayment(event)"
+          class="bg-white rounded-2xl border border-ink/8 p-8 sm:p-10"
+        >
+          <!-- Step 1: Rubrique -->
+          <div class="mb-10 reveal">
+            <div class="flex items-center gap-2 mb-5">
+              <span
+                class="w-6 h-6 rounded-full bg-purple-500 text-white text-[.72rem] font-mono flex items-center justify-center"
+                >1</span
+              >
+              <h2
+                class="font-display font-medium text-lg"
+                data-fr="Rubrique de paiement"
+                data-en="Payment category"
+              >
+                Rubrique de paiement
+              </h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <button
+                type="button"
+                onclick="selectRubric(this, 'inscription')"
+                data-rubric="inscription"
+                class="rubric-tab active text-left px-5 py-4 rounded-xl border border-ink/15"
+              >
+                <div
+                  class="font-body font-semibold mb-1"
+                  style="font-size: 0.88rem"
+                  data-fr="Frais d'inscription"
+                  data-en="Registration fees"
+                >
+                  Frais d'inscription
+                </div>
+                <div
+                  class="opacity-60"
+                  style="font-size: 0.76rem"
+                  data-fr="Nouvelle candidature"
+                  data-en="New application"
+                >
+                  Nouvelle candidature
+                </div>
+              </button>
+              <button
+                type="button"
+                onclick="selectRubric(this, 'academique')"
+                data-rubric="academique"
+                class="rubric-tab text-left px-5 py-4 rounded-xl border border-ink/15"
+              >
+                <div
+                  class="font-body font-semibold mb-1"
+                  style="font-size: 0.88rem"
+                  data-fr="Frais académiques"
+                  data-en="Academic fees"
+                >
+                  Frais académiques
+                </div>
+                <div
+                  class="opacity-60"
+                  style="font-size: 0.76rem"
+                  data-fr="Licence ou Master"
+                  data-en="Bachelor's or Master's"
+                >
+                  Licence ou Master
+                </div>
+              </button>
+              <button
+                type="button"
+                onclick="selectRubric(this, 'continue')"
+                data-rubric="continue"
+                class="rubric-tab text-left px-5 py-4 rounded-xl border border-ink/15"
+              >
+                <div
+                  class="font-body font-semibold mb-1"
+                  style="font-size: 0.88rem"
+                  data-fr="Formation continue"
+                  data-en="Continuing education"
+                >
+                  Formation continue
+                </div>
+                <div
+                  class="opacity-60"
+                  style="font-size: 0.76rem"
+                  data-fr="Modules certifiés"
+                  data-en="Certified modules"
+                >
+                  Modules certifiés
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 2: Method -->
+          <div class="mb-10 reveal" style="transition-delay: 0.06s">
+            <div class="flex items-center gap-2 mb-5">
+              <span
+                class="w-6 h-6 rounded-full bg-purple-500 text-white text-[.72rem] font-mono flex items-center justify-center"
+                >2</span
+              >
+              <h2
+                class="font-display font-medium text-lg"
+                data-fr="Moyen de paiement"
+                data-en="Payment method"
+              >
+                Moyen de paiement
+              </h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label
+                class="method-card selected flex items-center gap-3.5 px-5 py-4 rounded-xl border border-ink/15"
+              >
+                <input
+                  type="radio"
+                  name="method"
+                  value="orange"
+                  checked
+                  class="hidden"
+                  onchange="selectMethod(this)"
+                />
+                <span class="method-radio flex-shrink-0"></span>
+                <div class="flex items-center gap-2.5">
+                  <span class="text-xl">🟠</span>
+                  <span class="font-body font-semibold" style="font-size: 0.88rem">Orange Money</span>
+                </div>
+              </label>
+              <label
+                class="method-card flex items-center gap-3.5 px-5 py-4 rounded-xl border border-ink/15"
+              >
+                <input
+                  type="radio"
+                  name="method"
+                  value="mtn"
+                  class="hidden"
+                  onchange="selectMethod(this)"
+                />
+                <span class="method-radio flex-shrink-0"></span>
+                <div class="flex items-center gap-2.5">
+                  <span class="text-xl">🟡</span>
+                  <span class="font-body font-semibold" style="font-size: 0.88rem">MTN Mobile Money</span>
+                </div>
+              </label>
+              <label
+                class="method-card flex items-center gap-3.5 px-5 py-4 rounded-xl border border-ink/15"
+              >
+                <input
+                  type="radio"
+                  name="method"
+                  value="paypal"
+                  class="hidden"
+                  onchange="selectMethod(this)"
+                />
+                <span class="method-radio flex-shrink-0"></span>
+                <div class="flex items-center gap-2.5">
+                  <span class="text-xl">🅿️</span>
+                  <span class="font-body font-semibold" style="font-size: 0.88rem">PayPal</span>
+                </div>
+              </label>
+              <label
+                class="method-card flex items-center gap-3.5 px-5 py-4 rounded-xl border border-ink/15"
+              >
+                <input
+                  type="radio"
+                  name="method"
+                  value="western"
+                  class="hidden"
+                  onchange="selectMethod(this)"
+                />
+                <span class="method-radio flex-shrink-0"></span>
+                <div class="flex items-center gap-2.5">
+                  <span class="text-xl">💸</span>
+                  <span class="font-body font-semibold" style="font-size: 0.88rem"
+                    >Western Union / MoneyGram</span
+                  >
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Step 3: Details -->
+          <div class="mb-9 reveal" style="transition-delay: 0.12s">
+            <div class="flex items-center gap-2 mb-5">
+              <span
+                class="w-6 h-6 rounded-full bg-purple-500 text-white text-[.72rem] font-mono flex items-center justify-center"
+                >3</span
+              >
+              <h2
+                class="font-display font-medium text-lg"
+                data-fr="Vos informations"
+                data-en="Your information"
+              >
+                Vos informations
+              </h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div class="sm:col-span-2">
+                <label
+                  class="block font-body text-[.78rem] font-semibold text-ink/70 mb-2"
+                  data-fr="Nom complet"
+                  data-en="Full name"
+                  >Nom complet</label
+                >
+                <input
+                  type="text"
+                  required
+                  class="field-input w-full px-4 py-3 rounded-xl border border-ink/15 text-sm outline-none"
+                  placeholder="Jean Mballa"
+                />
+              </div>
+              <div>
+                <label
+                  class="block font-body text-[.78rem] font-semibold text-ink/70 mb-2"
+                  data-fr="Email"
+                  data-en="Email"
+                  >Email</label
+                >
+                <input
+                  type="email"
+                  required
+                  class="field-input w-full px-4 py-3 rounded-xl border border-ink/15 text-sm outline-none"
+                  placeholder="jean.mballa@email.com"
+                />
+              </div>
+              <div>
+                <label
+                  class="block font-body text-[.78rem] font-semibold text-ink/70 mb-2"
+                  data-fr="Montant (FCFA)"
+                  data-en="Amount (FCFA)"
+                  >Montant (FCFA)</label
+                >
+                <input
+                  type="number"
+                  required
+                  class="field-input w-full px-4 py-3 rounded-xl border border-ink/15 text-sm outline-none"
+                  placeholder="50 000"
+                />
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full font-body text-[.85rem] font-bold py-4 bg-purple-500 text-white rounded-full hover:bg-purple-700 transition-colors duration-300"
+            data-fr="Procéder au paiement →"
+            data-en="Proceed to payment →"
+          >
+            Procéder au paiement →
+          </button>
+          <p
+            class="text-center text-ink/45 mt-4"
+            style="font-size: 0.76rem"
+            data-fr="Vous serez redirigé vers votre fournisseur de paiement pour finaliser la transaction."
+            data-en="You will be redirected to your payment provider to complete the transaction."
+          >
+            Vous serez redirigé vers votre fournisseur de paiement pour
+            finaliser la transaction.
+          </p>
+        </form>
+      </div>
+    </section>
+
+    <div class="stitch-divider max-w-6xl mx-auto"></div>
+
+    <!-- ═══════════════════════════════════════
+       SECURITY NOTE
+  ═══════════════════════════════════════ -->
+    <section class="py-16 px-6 bg-purple-50/60">
+      <div
+        class="max-w-3xl mx-auto flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left reveal"
+      >
+        <div
+          class="w-14 h-14 rounded-full bg-white border border-purple-200 flex items-center justify-center text-2xl flex-shrink-0 mx-auto sm:mx-0"
+        >
+          🔒
+        </div>
+        <p
+          class="text-ink/70 leading-relaxed"
+          style="font-size: 0.9rem"
+          data-fr="Toutes les transactions sont traitées par nos partenaires de paiement habilités. Le pôle CTD ne stocke aucune information bancaire ou de carte sur sa plateforme. En cas de problème lors d'une transaction, contactez notre équipe."
+          data-en="All transactions are processed by our authorized payment partners. The CTD pole does not store any banking or card information on its platform. If you have an issue during a transaction, contact our team."
+        >
+          Toutes les transactions sont traitées par nos partenaires de
+          paiement habilités. Le pôle CTD ne stocke aucune information
+          bancaire ou de carte sur sa plateforme. En cas de problème lors
+          d'une transaction, contactez notre équipe.
+        </p>
+      </div>
+    </section>
+
+    <!-- Toast -->
+    <div
+      id="toast"
+      class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-ink text-parchment px-6 py-3.5 rounded-xl shadow-2xl z-50 font-body text-sm flex items-center gap-2"
+    >
+      <span class="text-amber-light">ℹ</span>
+      <span
+        data-fr="Module de paiement en cours d'intégration."
+        data-en="Payment module currently being integrated."
+        >Module de paiement en cours d'intégration.</span
+      >
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════ -->
+    <footer class="bg-purple-900 text-parchment/70 px-6 pt-16 pb-8">
+      <div class="max-w-6xl mx-auto">
+        <div
+          class="grid grid-cols-1 md:grid-cols-[1.3fr_1fr_1fr_1fr] gap-10 pb-12"
+        >
+          <div>
+            <img
+              src="assets/ctd_logo.png"
+              class="h-10 w-auto mb-4 brightness-0 invert opacity-90"
+              alt="CTD"
+            />
+            <p
+              class="leading-relaxed max-w-xs"
+              style="font-size: 0.85rem"
+              data-fr="Le pôle CTD forme des serviteurs de Dieu pour une Église solide, fidèle aux Écritures et engagée dans la mission."
+              data-en="The CTD pole trains servants of God for a Church that is strong, faithful to Scripture and engaged in mission."
+            >
+              Le pôle CTD forme des serviteurs de Dieu pour une Église
+              solide, fidèle aux Écritures et engagée dans la mission.
+            </p>
+          </div>
+          <div>
+            <div
+              class="eyebrow text-[.65rem] text-parchment/40 mb-4"
+              data-fr="NAVIGATION"
+              data-en="NAVIGATION"
+            >
+              NAVIGATION
+            </div>
+            <ul class="space-y-2.5" style="font-size: 0.85rem">
+              <li><a href="index.html" class="hover:text-amber-light" data-fr="Accueil" data-en="Home">Accueil</a></li>
+              <li><a href="programmes.html" class="hover:text-amber-light" data-fr="Programmes" data-en="Programs">Programmes</a></li>
+              <li><a href="inscription.html" class="hover:text-amber-light" data-fr="Inscription" data-en="Admissions">Inscription</a></li>
+              <li><a href="contact.html" class="hover:text-amber-light" data-fr="Contact" data-en="Contact">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <div
+              class="eyebrow text-[.65rem] text-parchment/40 mb-4"
+              data-fr="ESPACE ÉTUDIANT"
+              data-en="STUDENT SPACE"
+            >
+              ESPACE ÉTUDIANT
+            </div>
+            <ul class="space-y-2.5" style="font-size: 0.85rem">
+              <li><a href="connexion.html" class="hover:text-amber-light" data-fr="Connexion" data-en="Login">Connexion</a></li>
+              <li><a href="paiement.html" class="hover:text-amber-light" data-fr="Paiement" data-en="Payment">Paiement</a></li>
+            </ul>
+          </div>
+          <div>
+            <div
+              class="eyebrow text-[.65rem] text-parchment/40 mb-4"
+              data-fr="CONTACT"
+              data-en="CONTACT"
+            >
+              CONTACT
+            </div>
+            <ul class="space-y-2.5" style="font-size: 0.85rem">
+              <li>B.P. 701 Ngaoundéré, Adamaoua</li>
+              <li>contact@pctd.net</li>
+              <li>www.pctd.net</li>
+            </ul>
+          </div>
+        </div>
+
+        <div
+          class="border-t border-white/10 pt-8 pb-2 flex flex-col md:flex-row items-center justify-between gap-6"
+        >
+          <div
+            class="eyebrow text-[.62rem] text-parchment/35"
+            data-fr="EN PARTENARIAT AVEC"
+            data-en="IN PARTNERSHIP WITH"
+          >
+            EN PARTENARIAT AVEC
+          </div>
+          <div class="flex items-center gap-6 flex-wrap justify-center">
+            <span class="font-display text-lg text-parchment/60">FATECAM</span>
+            <span class="font-display text-lg text-parchment/60">AEC</span>
+            <span class="font-display text-lg text-parchment/60">WAM</span>
+            <span class="font-display text-lg text-parchment/60">FJC</span>
+          </div>
+        </div>
+
+        <div
+          class="text-center pt-6 font-mono text-[.68rem] text-parchment/35"
+        >
+          © 2026 CTD, FATECAM / AEC. Tous droits réservés.
+        </div>
+      </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════
+       SCRIPTS
+  ═══════════════════════════════════════ -->
+    <script>
+      function setLang(l) {
+        document
+          .querySelectorAll(".lang-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector(`.lang-btn[onclick="setLang('${l}')"]`)
+          .classList.add("active");
+        document.querySelectorAll("[data-fr]").forEach((el) => {
+          const txt = el.getAttribute("data-" + l);
+          if (txt) el.textContent = txt;
+        });
+      }
+
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("show");
+              obs.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.12 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+
+      window.addEventListener("scroll", () => {
+        document.getElementById("navbar").style.boxShadow =
+          window.pageYOffset > 60 ? "0 2px 24px rgba(26,21,48,.08)" : "none";
+      });
+
+      function toggleMenu() {
+        document.getElementById("mobileMenu").classList.toggle("hidden");
+      }
+
+      function selectRubric(btn, key) {
+        document.querySelectorAll(".rubric-tab").forEach((t) => {
+          t.classList.toggle("active", t === btn);
+        });
+      }
+
+      function selectMethod(input) {
+        document.querySelectorAll(".method-card").forEach((card) => {
+          card.classList.toggle("selected", card.contains(input) && input.checked);
+        });
+      }
+
+      function submitPayment(e) {
+        e.preventDefault();
+        const toast = document.getElementById("toast");
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 3800);
+      }
+    </script>
+  </body>
+</html>
