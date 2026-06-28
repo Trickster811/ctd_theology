@@ -1,0 +1,992 @@
+<!doctype html>
+<html lang="fr" data-lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CTD — Inscription</title>
+    <link rel="shortcut icon" href="assets/ctd_logo.png" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ink: { DEFAULT: "#1A1530", 70: "#4A4360", 40: "#8B85A0" },
+              purple: {
+                50: "#F4EEF9",
+                100: "#E6D8F0",
+                300: "#A571C4",
+                500: "#6C2E91",
+                600: "#5A2579",
+                700: "#481D62",
+                900: "#2E1240",
+              },
+              azure: {
+                50: "#EAF2FA",
+                300: "#5C9BD6",
+                500: "#095CAC",
+                600: "#074B8C",
+                700: "#063A6C",
+              },
+              parchment: { DEFAULT: "#FBF8F3", deep: "#F3ECDE" },
+              amber: { DEFAULT: "#C98A3D", light: "#DDA862", dark: "#A86B26" },
+            },
+            fontFamily: {
+              display: ["Fraunces", "Georgia", "serif"],
+              body: ["Inter", "system-ui", "sans-serif"],
+              mono: ["IBM Plex Mono", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        background: #fbf8f3;
+        color: #1a1530;
+      }
+      .font-display {
+        font-family: "Fraunces", Georgia, serif;
+      }
+      .font-mono {
+        font-family: "IBM Plex Mono", monospace;
+      }
+
+      .stitch-divider {
+        position: relative;
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(26, 21, 48, 0.18) 12%,
+          rgba(26, 21, 48, 0.18) 88%,
+          transparent
+        );
+      }
+      .stitch-divider::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: repeating-linear-gradient(
+          to right,
+          rgba(26, 21, 48, 0.32) 0,
+          rgba(26, 21, 48, 0.32) 4px,
+          transparent 4px,
+          transparent 11px
+        );
+        height: 1px;
+        top: -3px;
+      }
+
+      .nav-link {
+        position: relative;
+        transition: color 0.2s;
+      }
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 0;
+        height: 1px;
+        background: #c98a3d;
+        transition: width 0.25s ease;
+      }
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 100%;
+      }
+      .nav-link.active {
+        color: #2e1240;
+      }
+
+      .lang-btn {
+        transition: all 0.2s;
+      }
+      .lang-btn.active {
+        background: #1a1530;
+        color: #fbf8f3;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: perspective(800px) rotateX(6deg) translateY(18px);
+        transform-origin: top center;
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease;
+      }
+      .reveal.show {
+        opacity: 1;
+        transform: perspective(800px) rotateX(0deg) translateY(0);
+      }
+
+      .bg-paper-texture {
+        background-image: radial-gradient(
+            rgba(26, 21, 48, 0.025) 1px,
+            transparent 1px
+          ),
+          radial-gradient(rgba(26, 21, 48, 0.018) 1px, transparent 1px);
+        background-size: 26px 26px, 17px 17px;
+        background-position: 0 0, 8px 9px;
+      }
+
+      .eyebrow {
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 0.18em;
+      }
+
+      .check-li {
+        position: relative;
+        padding-left: 1.5rem;
+      }
+      .check-li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        top: 0;
+        color: #c98a3d;
+        font-weight: 700;
+        font-size: 0.8rem;
+      }
+
+      .field-input {
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .field-input:focus {
+        border-color: #6c2e91;
+        box-shadow: 0 0 0 3px rgba(108, 46, 145, 0.12);
+      }
+
+      .file-drop {
+        transition: all 0.2s;
+      }
+      .file-drop:hover {
+        border-color: #6c2e91;
+        background: #f4eef9;
+      }
+
+      #toast {
+        transform: translateY(20px);
+        opacity: 0;
+        transition:
+          transform 0.35s ease,
+          opacity 0.35s ease;
+        pointer-events: none;
+      }
+      #toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .reveal {
+          transition: none;
+          transform: none;
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body class="overflow-x-hidden">
+    <!-- ═══════════════════════════════════════
+       TOP BAR
+  ═══════════════════════════════════════ -->
+    <div
+      class="bg-ink text-parchment text-center py-2 px-4 font-mono text-[.68rem] tracking-[.12em] relative z-50"
+    >
+      <span
+        data-fr="Année académique 2026–2027 — candidatures ouvertes"
+        data-en="2026–2027 academic year — applications open"
+      >
+        Année académique 2026–2027 — candidatures ouvertes
+      </span>
+      <a
+        href="inscription.html"
+        class="underline text-amber-light ml-2"
+        data-fr="Candidater →"
+        data-en="Apply →"
+        >Candidater →</a
+      >
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       NAVBAR
+  ═══════════════════════════════════════ -->
+    <nav
+      id="navbar"
+      class="sticky top-0 z-40 bg-parchment/95 backdrop-blur border-b border-ink/10 px-6 h-[72px] flex items-center justify-between transition-shadow duration-300"
+    >
+      <a href="index.html" class="flex items-center gap-3 flex-shrink-0">
+        <img src="assets/ctd_logo.png" class="h-11 w-auto" alt="CTD" />
+      </a>
+
+      <ul class="hidden lg:flex items-center list-none gap-8 h-[72px]">
+        <li>
+          <a
+            href="index.html"
+            class="nav-link font-body text-[.85rem] font-medium text-ink/75 h-[72px] flex items-center"
+            data-fr="Accueil"
+            data-en="Home"
+            >Accueil</a
+          >
+        </li>
+        <li>
+          <a
+            href="programmes.html"
+            class="nav-link font-body text-[.85rem] font-medium text-ink/75 h-[72px] flex items-center"
+            data-fr="Programmes"
+            data-en="Programs"
+            >Programmes</a
+          >
+        </li>
+        <li>
+          <a
+            href="inscription.html"
+            class="nav-link active font-body text-[.85rem] font-medium text-ink h-[72px] flex items-center"
+            data-fr="Inscription"
+            data-en="Admissions"
+            >Inscription</a
+          >
+        </li>
+        <li>
+          <a
+            href="contact.html"
+            class="nav-link font-body text-[.85rem] font-medium text-ink/75 h-[72px] flex items-center"
+            data-fr="Contact"
+            data-en="Contact"
+            >Contact</a
+          >
+        </li>
+      </ul>
+
+      <div class="flex items-center gap-3">
+        <div
+          class="flex rounded-full overflow-hidden border border-ink/15 bg-white/60"
+        >
+          <button
+            onclick="setLang('fr')"
+            class="lang-btn active font-mono text-[.65rem] font-semibold tracking-[.05em] px-3 py-1.5 text-ink/55 bg-transparent border-none cursor-pointer"
+          >
+            FR
+          </button>
+          <button
+            onclick="setLang('en')"
+            class="lang-btn font-mono text-[.65rem] font-semibold tracking-[.05em] px-3 py-1.5 text-ink/55 bg-transparent border-none cursor-pointer"
+          >
+            EN
+          </button>
+        </div>
+        <a
+          href="connexion.html"
+          class="hidden sm:inline-block font-body text-[.8rem] font-semibold px-4 py-2 border border-purple-500 text-purple-500 rounded-full hover:bg-purple-500 hover:text-white transition-colors duration-200"
+          data-fr="Connexion"
+          data-en="Login"
+          >Connexion</a
+        >
+        <button
+          onclick="toggleMenu()"
+          class="lg:hidden flex flex-col gap-[5px] p-1 bg-transparent border-none cursor-pointer"
+          aria-label="Menu"
+        >
+          <span class="block w-5 h-[2px] bg-ink rounded"></span>
+          <span class="block w-5 h-[2px] bg-ink rounded"></span>
+          <span class="block w-5 h-[2px] bg-ink rounded"></span>
+        </button>
+      </div>
+    </nav>
+
+    <div
+      id="mobileMenu"
+      class="hidden lg:hidden bg-parchment border-t border-ink/10 z-30 relative"
+    >
+      <a
+        href="index.html"
+        class="block font-body text-sm text-ink/75 px-6 py-3 border-b border-ink/8"
+        data-fr="Accueil"
+        data-en="Home"
+        >Accueil</a
+      >
+      <a
+        href="programmes.html"
+        class="block font-body text-sm text-ink/75 px-6 py-3 border-b border-ink/8"
+        data-fr="Programmes"
+        data-en="Programs"
+        >Programmes</a
+      >
+      <a
+        href="inscription.html"
+        class="block font-body text-sm text-ink px-6 py-3 border-b border-ink/8"
+        data-fr="Inscription"
+        data-en="Admissions"
+        >Inscription</a
+      >
+      <a
+        href="contact.html"
+        class="block font-body text-sm text-ink/75 px-6 py-3 border-b border-ink/8"
+        data-fr="Contact"
+        data-en="Contact"
+        >Contact</a
+      >
+      <a
+        href="connexion.html"
+        class="block font-body text-sm text-purple-500 font-semibold px-6 py-3"
+        data-fr="Connexion"
+        data-en="Login"
+        >Connexion</a
+      >
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════ -->
+    <section class="bg-paper-texture pt-16 pb-14 px-6">
+      <div class="max-w-4xl mx-auto text-center">
+        <div class="flex items-center gap-2 mb-6 justify-center">
+          <span class="block w-8 h-px bg-amber"></span>
+          <span
+            class="eyebrow text-[.68rem] text-amber-dark"
+            data-fr="REJOINDRE LE PCTD"
+            data-en="JOINING PCTD"
+            >REJOINDRE LE PCTD</span
+          >
+          <span class="block w-8 h-px bg-amber"></span>
+        </div>
+        <h1
+          class="font-display font-medium leading-[1.1] mb-5"
+          style="font-size: clamp(2.2rem, 4.6vw, 3.8rem)"
+        >
+          <span data-fr="Cinq étapes vous séparent de" data-en="Five steps stand between you and">
+            Cinq étapes vous séparent de</span
+          ><br />
+          <em class="italic text-purple-500" data-fr="votre formation." data-en="your training.">
+            votre formation.</em
+          >
+        </h1>
+        <p
+          class="text-ink/70 leading-relaxed max-w-2xl mx-auto"
+          style="font-size: 0.96rem"
+          data-fr="Merci de votre intérêt pour le PCTD ! Nos formations sont ouvertes aux pasteurs, responsables d'Églises, missionnaires, enseignants bibliques, étudiants et toute personne appelée à servir dans le ministère chrétien."
+          data-en="Thank you for your interest in PCTD! Our programs are open to pastors, church leaders, missionaries, Bible teachers, students and anyone called to serve in Christian ministry."
+        >
+          Merci de votre intérêt pour le PCTD ! Nos formations sont ouvertes
+          aux pasteurs, responsables d'Églises, missionnaires, enseignants
+          bibliques, étudiants et toute personne appelée à servir dans le
+          ministère chrétien.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       CONDITIONS D'INSCRIPTION
+  ═══════════════════════════════════════ -->
+    <section class="py-20 px-6">
+      <div class="max-w-5xl mx-auto">
+        <div
+          class="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-12 items-start"
+        >
+          <div class="reveal">
+            <div class="flex items-center gap-2 mb-4">
+              <span class="block w-7 h-px bg-amber"></span>
+              <span
+                class="eyebrow text-[.68rem] text-amber-dark"
+                data-fr="AVANT DE COMMENCER"
+                data-en="BEFORE YOU BEGIN"
+                >AVANT DE COMMENCER</span
+              >
+            </div>
+            <h2
+              class="font-display font-medium leading-[1.15] mb-4"
+              style="font-size: clamp(1.8rem, 3vw, 2.4rem)"
+              data-fr="Conditions d'inscription"
+              data-en="Admission requirements"
+            >
+              Conditions d'inscription
+            </h2>
+            <p
+              class="text-ink/70 leading-[1.8]"
+              style="font-size: 0.92rem"
+              data-fr="Préparez ces documents avant de commencer votre candidature pour accélérer le processus."
+              data-en="Prepare these documents before starting your application to speed up the process."
+            >
+              Préparez ces documents avant de commencer votre candidature
+              pour accélérer le processus.
+            </p>
+          </div>
+
+          <div
+            class="reveal bg-white rounded-2xl border border-ink/8 p-8"
+            style="transition-delay: 0.08s"
+          >
+            <p
+              class="text-ink/75 leading-[1.8] mb-5"
+              style="font-size: 0.92rem"
+              data-fr="Les candidats doivent fournir :"
+              data-en="Applicants must provide:"
+            >
+              Les candidats doivent fournir :
+            </p>
+            <ul
+              class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-ink/75"
+              style="font-size: 0.88rem"
+            >
+              <li class="check-li" data-fr="Une pièce d'identité valide" data-en="A valid ID document">Une pièce d'identité valide</li>
+              <li class="check-li" data-fr="Une photo récente" data-en="A recent photo">Une photo récente</li>
+              <li class="check-li" data-fr="Les copies des diplômes disponibles" data-en="Copies of available diplomas">Les copies des diplômes disponibles</li>
+              <li class="check-li" data-fr="Une recommandation pastorale ou ecclésiale" data-en="A pastoral or church recommendation">Une recommandation pastorale ou ecclésiale</li>
+              <li class="check-li sm:col-span-2" data-fr="Le formulaire de candidature dûment rempli" data-en="The completed application form">Le formulaire de candidature dûment rempli</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="stitch-divider max-w-6xl mx-auto"></div>
+
+    <!-- ═══════════════════════════════════════
+       PROCESSUS — 5 STEPS (vertical, detailed)
+  ═══════════════════════════════════════ -->
+    <section class="py-20 px-6 bg-purple-50/60">
+      <div class="max-w-3xl mx-auto">
+        <div class="text-center mb-14 reveal">
+          <div class="flex items-center justify-center gap-2 mb-4">
+            <span class="block w-7 h-px bg-amber"></span>
+            <span
+              class="eyebrow text-[.68rem] text-amber-dark"
+              data-fr="LE PROCESSUS"
+              data-en="THE PROCESS"
+              >LE PROCESSUS</span
+            >
+            <span class="block w-7 h-px bg-amber"></span>
+          </div>
+          <h2
+            class="font-display font-medium leading-[1.15]"
+            style="font-size: clamp(1.8rem, 3vw, 2.4rem)"
+            data-fr="Processus d'inscription"
+            data-en="Admission process"
+          >
+            Processus d'inscription
+          </h2>
+        </div>
+
+        <div class="relative">
+          <!-- vertical stitched line -->
+          <div
+            class="absolute left-6 top-2 bottom-2 w-px stitch-divider"
+            style="background: rgba(26,21,48,.18); height: auto;"
+          ></div>
+
+          <div class="space-y-10">
+            <!-- Step 1 -->
+            <div class="flex gap-6 reveal">
+              <div
+                class="w-12 h-12 rounded-full bg-purple-500 text-white font-mono text-sm flex items-center justify-center flex-shrink-0 relative z-10"
+              >
+                1
+              </div>
+              <div class="pt-1.5">
+                <h3
+                  class="font-display font-medium text-lg mb-1.5"
+                  data-fr="Créer votre compte étudiant"
+                  data-en="Create your student account"
+                >
+                  Créer votre compte étudiant
+                </h3>
+                <p
+                  class="text-ink/65 leading-relaxed"
+                  style="font-size: 0.88rem"
+                  data-fr="Ouvrez un compte sur la plateforme CTD pour démarrer votre dossier."
+                  data-en="Open an account on the CTD platform to start your file."
+                >
+                  Ouvrez un compte sur la plateforme CTD pour démarrer votre
+                  dossier.
+                </p>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="flex gap-6 reveal" style="transition-delay: 0.06s">
+              <div
+                class="w-12 h-12 rounded-full bg-purple-500 text-white font-mono text-sm flex items-center justify-center flex-shrink-0 relative z-10"
+              >
+                2
+              </div>
+              <div class="pt-1.5">
+                <h3
+                  class="font-display font-medium text-lg mb-1.5"
+                  data-fr="Remplir le formulaire de candidature"
+                  data-en="Fill in the application form"
+                >
+                  Remplir le formulaire de candidature
+                </h3>
+                <p
+                  class="text-ink/65 leading-relaxed"
+                  style="font-size: 0.88rem"
+                  data-fr="Indiquez vos informations personnelles et le programme choisi — vous pouvez utiliser le formulaire ci-dessous."
+                  data-en="Provide your personal information and chosen program — you can use the form below."
+                >
+                  Indiquez vos informations personnelles et le programme
+                  choisi — vous pouvez utiliser le formulaire ci-dessous.
+                </p>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="flex gap-6 reveal" style="transition-delay: 0.12s">
+              <div
+                class="w-12 h-12 rounded-full bg-purple-500 text-white font-mono text-sm flex items-center justify-center flex-shrink-0 relative z-10"
+              >
+                3
+              </div>
+              <div class="pt-1.5">
+                <h3
+                  class="font-display font-medium text-lg mb-1.5"
+                  data-fr="Téléverser les documents demandés"
+                  data-en="Upload the requested documents"
+                >
+                  Téléverser les documents demandés
+                </h3>
+                <p
+                  class="text-ink/65 leading-relaxed"
+                  style="font-size: 0.88rem"
+                  data-fr="Pièce d'identité, photo, diplômes et lettre de recommandation."
+                  data-en="ID document, photo, diplomas and recommendation letter."
+                >
+                  Pièce d'identité, photo, diplômes et lettre de
+                  recommandation.
+                </p>
+              </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="flex gap-6 reveal" style="transition-delay: 0.18s">
+              <div
+                class="w-12 h-12 rounded-full bg-purple-500 text-white font-mono text-sm flex items-center justify-center flex-shrink-0 relative z-10"
+              >
+                4
+              </div>
+              <div class="pt-1.5">
+                <h3
+                  class="font-display font-medium text-lg mb-1.5"
+                  data-fr="Effectuer le paiement des frais d'inscription"
+                  data-en="Pay the registration fees"
+                >
+                  Effectuer le paiement des frais d'inscription
+                </h3>
+                <p class="text-ink/65 leading-relaxed" style="font-size: 0.88rem">
+                  <span
+                    data-fr="Réglez les frais d'inscription via Orange Money, MTN Mobile Money, PayPal ou Western Union/MoneyGram."
+                    data-en="Pay the registration fees via Orange Money, MTN Mobile Money, PayPal or Western Union/MoneyGram."
+                    >Réglez les frais d'inscription via Orange Money, MTN
+                    Mobile Money, PayPal ou Western Union/MoneyGram.</span
+                  >
+                  <a href="paiement.html" class="text-azure-500 font-semibold hover:text-azure-700" data-fr=" Voir la page Paiement →" data-en=" See the Payment page →"> Voir la page Paiement →</a>
+                </p>
+              </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="flex gap-6 reveal" style="transition-delay: 0.24s">
+              <div
+                class="w-12 h-12 rounded-full bg-amber text-white font-mono text-sm flex items-center justify-center flex-shrink-0 relative z-10"
+              >
+                5
+              </div>
+              <div class="pt-1.5">
+                <h3
+                  class="font-display font-medium text-lg mb-1.5"
+                  data-fr="Recevoir la confirmation académique"
+                  data-en="Receive academic confirmation"
+                >
+                  Recevoir la confirmation académique
+                </h3>
+                <p
+                  class="text-ink/65 leading-relaxed"
+                  style="font-size: 0.88rem"
+                  data-fr="Votre dossier est examiné, puis vous recevez votre confirmation officielle d'admission."
+                  data-en="Your file is reviewed, then you receive your official admission confirmation."
+                >
+                  Votre dossier est examiné, puis vous recevez votre
+                  confirmation officielle d'admission.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p
+          class="text-center text-ink/60 italic mt-12 reveal"
+          style="font-size: 0.88rem"
+          data-fr="Contactez-nous en cas de souci quelconque."
+          data-en="Contact us if you have any concerns."
+        >
+          Contactez-nous en cas de souci quelconque.
+        </p>
+      </div>
+    </section>
+
+    <div class="stitch-divider max-w-6xl mx-auto"></div>
+
+    <!-- ═══════════════════════════════════════
+       FORMULAIRE DE CANDIDATURE
+  ═══════════════════════════════════════ -->
+    <section class="py-24 px-6">
+      <div class="max-w-3xl mx-auto">
+        <div class="text-center mb-12 reveal">
+          <div class="flex items-center justify-center gap-2 mb-4">
+            <span class="block w-7 h-px bg-amber"></span>
+            <span
+              class="eyebrow text-[.68rem] text-amber-dark"
+              data-fr="ÉTAPE 2"
+              data-en="STEP 2"
+              >ÉTAPE 2</span
+            >
+            <span class="block w-7 h-px bg-amber"></span>
+          </div>
+          <h2
+            class="font-display font-medium leading-[1.15]"
+            style="font-size: clamp(1.8rem, 3vw, 2.4rem)"
+            data-fr="Formulaire de candidature"
+            data-en="Application form"
+          >
+            Formulaire de candidature
+          </h2>
+        </div>
+
+        <form
+          id="appForm"
+          onsubmit="submitApp(event)"
+          class="bg-white rounded-2xl border border-ink/8 p-8 sm:p-10"
+        >
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+            <div>
+              <label
+                class="block font-body text-[.78rem] font-semibold text-ink/70 mb-2"
+                data-fr="Nom"
+                data-en="Last name"
+                >Nom</label
+              >
+              <input
+                type="text"
+                required
+                class="field-input w-full px-4 py-3 rounded-xl border border-ink/15 text-sm outline-none"
+                placeholder="Mballa"
+              />
+            </div>
+            <div>
+              <label
+                class="block font-body text-[.78rem] font-semibold text-ink/70 mb-2"
+                data-fr="Prénom"
+                data-en="First name"
+                >Prénom</label
+              >
+              <input
+                type="text"
+                required
+                class="field-input w-full px-4 py-3 rounded-xl border border-ink/15 text-sm outline-none"
+                placeholder="Jean"
+              />
+            </div>
+            <div>
+              <label
+                class="block font-body text-[.78rem] font-semibold text-ink/70 mb-2"
+                data-fr="Pays"
+                data-en="Country"
+                >Pays</label
+              >
+              <input
+                type="text"
+                required
+                class="field-input w-full px-4 py-3 rounded-xl border border-ink/15 text-sm outline-none"
+                placeholder="Cameroun"
+              />
+            </div>
+            <div>
+              <label
+                class="block font-body text-[.78rem] font-semibold text-ink/70 mb-2"
+                data-fr="Téléphone"
+                data-en="Phone"
+                >Téléphone</label
+              >
+              <input
+                type="tel"
+                required
+                class="field-input w-full px-4 py-3 rounded-xl border border-ink/15 text-sm outline-none"
+                placeholder="+237 6 00 00 00 00"
+              />
+            </div>
+            <div class="sm:col-span-2">
+              <label
+                class="block font-body text-[.78rem] font-semibold text-ink/70 mb-2"
+                data-fr="Email"
+                data-en="Email"
+                >Email</label
+              >
+              <input
+                type="email"
+                required
+                class="field-input w-full px-4 py-3 rounded-xl border border-ink/15 text-sm outline-none"
+                placeholder="jean.mballa@email.com"
+              />
+            </div>
+            <div class="sm:col-span-2">
+              <label
+                class="block font-body text-[.78rem] font-semibold text-ink/70 mb-2"
+                data-fr="Programme souhaité"
+                data-en="Desired program"
+                >Programme souhaité</label
+              >
+              <select
+                class="field-input w-full px-4 py-3 rounded-xl border border-ink/15 text-sm outline-none bg-white"
+              >
+                <option data-fr="Licence en Théologie à distance" data-en="Distance Bachelor's in Theology">Licence en Théologie à distance</option>
+                <option data-fr="Master 2 Professionnel — Théologie pastorale" data-en="Professional Master's — Pastoral Theology">Master 2 Professionnel — Théologie pastorale</option>
+                <option data-fr="Master 2 Professionnel — Implantation d'Églises" data-en="Professional Master's — Church Planting">Master 2 Professionnel — Implantation d'Églises</option>
+                <option data-fr="Formation continue — Accompagnement pastoral et guérison de traumatisme" data-en="Continuing Education — Pastoral Care and Trauma Healing">Formation continue — Accompagnement pastoral et guérison de traumatisme</option>
+                <option data-fr="Formation continue — Islamologie appliquée" data-en="Continuing Education — Applied Islamology">Formation continue — Islamologie appliquée</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Document upload mock zone -->
+          <div class="mb-6">
+            <label
+              class="block font-body text-[.78rem] font-semibold text-ink/70 mb-2"
+              data-fr="Documents (pièce d'identité, photo, diplômes, recommandation)"
+              data-en="Documents (ID, photo, diplomas, recommendation)"
+              >Documents (pièce d'identité, photo, diplômes, recommandation)</label
+            >
+            <label
+              for="fileInput"
+              class="file-drop flex flex-col items-center justify-center gap-2 border-2 border-dashed border-ink/20 rounded-xl py-10 cursor-pointer text-center"
+            >
+              <span class="text-2xl">📎</span>
+              <span
+                class="font-body text-[.85rem] font-semibold text-ink/70"
+                data-fr="Cliquez pour joindre vos fichiers"
+                data-en="Click to attach your files"
+                >Cliquez pour joindre vos fichiers</span
+              >
+              <span
+                class="font-body text-[.74rem] text-ink/45"
+                data-fr="PDF, JPG ou PNG — 4 fichiers maximum"
+                data-en="PDF, JPG or PNG — 4 files maximum"
+                >PDF, JPG ou PNG — 4 fichiers maximum</span
+              >
+              <input id="fileInput" type="file" multiple class="hidden" />
+            </label>
+          </div>
+
+          <div class="mb-7">
+            <label
+              class="block font-body text-[.78rem] font-semibold text-ink/70 mb-2"
+              data-fr="Message ou précisions (optionnel)"
+              data-en="Message or details (optional)"
+              >Message ou précisions (optionnel)</label
+            >
+            <textarea
+              rows="4"
+              class="field-input w-full px-4 py-3 rounded-xl border border-ink/15 text-sm outline-none resize-none"
+              placeholder="…"
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full font-body text-[.85rem] font-bold py-4 bg-purple-500 text-white rounded-full hover:bg-purple-700 transition-colors duration-300"
+            data-fr="Soumettre ma candidature →"
+            data-en="Submit my application →"
+          >
+            Soumettre ma candidature →
+          </button>
+          <p
+            class="text-center text-ink/45 mt-4"
+            style="font-size: 0.76rem"
+            data-fr="Vous recevrez un email de confirmation après l'examen de votre dossier."
+            data-en="You will receive a confirmation email once your file has been reviewed."
+          >
+            Vous recevrez un email de confirmation après l'examen de votre
+            dossier.
+          </p>
+        </form>
+      </div>
+    </section>
+
+    <!-- Toast -->
+    <div
+      id="toast"
+      class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-ink text-parchment px-6 py-3.5 rounded-xl shadow-2xl z-50 font-body text-sm flex items-center gap-2"
+    >
+      <span class="text-amber-light">✓</span>
+      <span
+        data-fr="Candidature envoyée ! Nous reviendrons vers vous bientôt."
+        data-en="Application sent! We'll get back to you soon."
+        >Candidature envoyée ! Nous reviendrons vers vous bientôt.</span
+      >
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════ -->
+    <footer class="bg-purple-900 text-parchment/70 px-6 pt-16 pb-8">
+      <div class="max-w-6xl mx-auto">
+        <div
+          class="grid grid-cols-1 md:grid-cols-[1.3fr_1fr_1fr_1fr] gap-10 pb-12"
+        >
+          <div>
+            <img
+              src="assets/ctd_logo.png"
+              class="h-10 w-auto mb-4 brightness-0 invert opacity-90"
+              alt="CTD"
+            />
+            <p
+              class="leading-relaxed max-w-xs"
+              style="font-size: 0.85rem"
+              data-fr="Le pôle CTD forme des serviteurs de Dieu pour une Église solide, fidèle aux Écritures et engagée dans la mission."
+              data-en="The CTD pole trains servants of God for a Church that is strong, faithful to Scripture and engaged in mission."
+            >
+              Le pôle CTD forme des serviteurs de Dieu pour une Église
+              solide, fidèle aux Écritures et engagée dans la mission.
+            </p>
+          </div>
+          <div>
+            <div
+              class="eyebrow text-[.65rem] text-parchment/40 mb-4"
+              data-fr="NAVIGATION"
+              data-en="NAVIGATION"
+            >
+              NAVIGATION
+            </div>
+            <ul class="space-y-2.5" style="font-size: 0.85rem">
+              <li><a href="index.html" class="hover:text-amber-light" data-fr="Accueil" data-en="Home">Accueil</a></li>
+              <li><a href="programmes.html" class="hover:text-amber-light" data-fr="Programmes" data-en="Programs">Programmes</a></li>
+              <li><a href="inscription.html" class="hover:text-amber-light" data-fr="Inscription" data-en="Admissions">Inscription</a></li>
+              <li><a href="contact.html" class="hover:text-amber-light" data-fr="Contact" data-en="Contact">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <div
+              class="eyebrow text-[.65rem] text-parchment/40 mb-4"
+              data-fr="ESPACE ÉTUDIANT"
+              data-en="STUDENT SPACE"
+            >
+              ESPACE ÉTUDIANT
+            </div>
+            <ul class="space-y-2.5" style="font-size: 0.85rem">
+              <li><a href="connexion.html" class="hover:text-amber-light" data-fr="Connexion" data-en="Login">Connexion</a></li>
+              <li><a href="paiement.html" class="hover:text-amber-light" data-fr="Paiement" data-en="Payment">Paiement</a></li>
+            </ul>
+          </div>
+          <div>
+            <div
+              class="eyebrow text-[.65rem] text-parchment/40 mb-4"
+              data-fr="CONTACT"
+              data-en="CONTACT"
+            >
+              CONTACT
+            </div>
+            <ul class="space-y-2.5" style="font-size: 0.85rem">
+              <li>B.P. 701 Ngaoundéré, Adamaoua</li>
+              <li>contact@pctd.net</li>
+              <li>www.pctd.net</li>
+            </ul>
+          </div>
+        </div>
+
+        <div
+          class="border-t border-white/10 pt-8 pb-2 flex flex-col md:flex-row items-center justify-between gap-6"
+        >
+          <div
+            class="eyebrow text-[.62rem] text-parchment/35"
+            data-fr="EN PARTENARIAT AVEC"
+            data-en="IN PARTNERSHIP WITH"
+          >
+            EN PARTENARIAT AVEC
+          </div>
+          <div class="flex items-center gap-6 flex-wrap justify-center">
+            <span class="font-display text-lg text-parchment/60">FATECAM</span>
+            <span class="font-display text-lg text-parchment/60">AEC</span>
+            <span class="font-display text-lg text-parchment/60">WAM</span>
+            <span class="font-display text-lg text-parchment/60">FJC</span>
+          </div>
+        </div>
+
+        <div
+          class="text-center pt-6 font-mono text-[.68rem] text-parchment/35"
+        >
+          © 2026 CTD, FATECAM / AEC. Tous droits réservés.
+        </div>
+      </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════
+       SCRIPTS
+  ═══════════════════════════════════════ -->
+    <script>
+      function setLang(l) {
+        document
+          .querySelectorAll(".lang-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector(`.lang-btn[onclick="setLang('${l}')"]`)
+          .classList.add("active");
+        document.querySelectorAll("[data-fr]").forEach((el) => {
+          const txt = el.getAttribute("data-" + l);
+          if (txt) el.textContent = txt;
+        });
+      }
+
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("show");
+              obs.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.12 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+
+      window.addEventListener("scroll", () => {
+        document.getElementById("navbar").style.boxShadow =
+          window.pageYOffset > 60 ? "0 2px 24px rgba(26,21,48,.08)" : "none";
+      });
+
+      function toggleMenu() {
+        document.getElementById("mobileMenu").classList.toggle("hidden");
+      }
+
+      // File drop label update
+      document
+        .getElementById("fileInput")
+        .addEventListener("change", function (e) {
+          const label = this.closest(".file-drop").querySelector("span:nth-child(2)");
+          if (this.files.length > 0) {
+            label.textContent =
+              this.files.length === 1
+                ? this.files[0].name
+                : `${this.files.length} fichiers sélectionnés`;
+          }
+        });
+
+      // Form submission (front-end only demo)
+      function submitApp(e) {
+        e.preventDefault();
+        const toast = document.getElementById("toast");
+        toast.classList.add("show");
+        document.getElementById("appForm").reset();
+        setTimeout(() => toast.classList.remove("show"), 3800);
+      }
+    </script>
+  </body>
+</html>

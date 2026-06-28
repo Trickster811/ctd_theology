@@ -1,0 +1,1149 @@
+<!doctype html>
+<html lang="fr" data-lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CTD — Programmes</title>
+    <link rel="shortcut icon" href="assets/ctd_logo.png" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ink: {
+                DEFAULT: "#1A1530",
+                70: "#4A4360",
+                40: "#8B85A0",
+              },
+              purple: {
+                50: "#F4EEF9",
+                100: "#E6D8F0",
+                300: "#A571C4",
+                500: "#6C2E91",
+                600: "#5A2579",
+                700: "#481D62",
+                900: "#2E1240",
+              },
+              azure: {
+                50: "#EAF2FA",
+                300: "#5C9BD6",
+                500: "#095CAC",
+                600: "#074B8C",
+                700: "#063A6C",
+              },
+              parchment: {
+                DEFAULT: "#FBF8F3",
+                deep: "#F3ECDE",
+              },
+              amber: {
+                DEFAULT: "#C98A3D",
+                light: "#DDA862",
+                dark: "#A86B26",
+              },
+            },
+            fontFamily: {
+              display: ["Fraunces", "Georgia", "serif"],
+              body: ["Inter", "system-ui", "sans-serif"],
+              mono: ["IBM Plex Mono", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        background: #fbf8f3;
+        color: #1a1530;
+      }
+      .font-display {
+        font-family: "Fraunces", Georgia, serif;
+      }
+      .font-mono {
+        font-family: "IBM Plex Mono", monospace;
+      }
+
+      .stitch-divider {
+        position: relative;
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(26, 21, 48, 0.18) 12%,
+          rgba(26, 21, 48, 0.18) 88%,
+          transparent
+        );
+      }
+      .stitch-divider::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: repeating-linear-gradient(
+          to right,
+          rgba(26, 21, 48, 0.32) 0,
+          rgba(26, 21, 48, 0.32) 4px,
+          transparent 4px,
+          transparent 11px
+        );
+        height: 1px;
+        top: -3px;
+      }
+
+      .nav-link {
+        position: relative;
+        transition: color 0.2s;
+      }
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 0;
+        height: 1px;
+        background: #c98a3d;
+        transition: width 0.25s ease;
+      }
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 100%;
+      }
+      .nav-link.active {
+        color: #2e1240;
+      }
+
+      .lang-btn {
+        transition: all 0.2s;
+      }
+      .lang-btn.active {
+        background: #1a1530;
+        color: #fbf8f3;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: perspective(800px) rotateX(6deg) translateY(18px);
+        transform-origin: top center;
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease;
+      }
+      .reveal.show {
+        opacity: 1;
+        transform: perspective(800px) rotateX(0deg) translateY(0);
+      }
+
+      .bg-paper-texture {
+        background-image: radial-gradient(
+            rgba(26, 21, 48, 0.025) 1px,
+            transparent 1px
+          ),
+          radial-gradient(rgba(26, 21, 48, 0.018) 1px, transparent 1px);
+        background-size: 26px 26px, 17px 17px;
+        background-position: 0 0, 8px 9px;
+      }
+
+      .eyebrow {
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 0.18em;
+      }
+
+      /* Tab control for program switcher */
+      .prog-tab {
+        transition: all 0.25s;
+        border-bottom: 2px solid transparent;
+      }
+      .prog-tab.active {
+        border-bottom-color: currentColor;
+      }
+      .prog-panel {
+        display: none;
+      }
+      .prog-panel.active {
+        display: block;
+      }
+
+      /* Specialization toggle (Master 2) */
+      .spec-toggle {
+        transition: all 0.25s;
+      }
+      .spec-toggle.active {
+        background: #6c2e91;
+        color: #fff;
+      }
+      .spec-panel {
+        display: none;
+      }
+      .spec-panel.active {
+        display: block;
+      }
+
+      .check-li {
+        position: relative;
+        padding-left: 1.5rem;
+      }
+      .check-li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        top: 0;
+        color: #c98a3d;
+        font-weight: 700;
+        font-size: 0.8rem;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .reveal {
+          transition: none;
+          transform: none;
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body class="overflow-x-hidden">
+    <!-- ═══════════════════════════════════════
+       TOP BAR
+  ═══════════════════════════════════════ -->
+    <div
+      class="bg-ink text-parchment text-center py-2 px-4 font-mono text-[.68rem] tracking-[.12em] relative z-50"
+    >
+      <span
+        data-fr="Année académique 2026–2027 — candidatures ouvertes"
+        data-en="2026–2027 academic year — applications open"
+      >
+        Année académique 2026–2027 — candidatures ouvertes
+      </span>
+      <a
+        href="inscription.html"
+        class="underline text-amber-light ml-2"
+        data-fr="Candidater →"
+        data-en="Apply →"
+        >Candidater →</a
+      >
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       NAVBAR
+  ═══════════════════════════════════════ -->
+    <nav
+      id="navbar"
+      class="sticky top-0 z-40 bg-parchment/95 backdrop-blur border-b border-ink/10 px-6 h-[72px] flex items-center justify-between transition-shadow duration-300"
+    >
+      <a href="index.html" class="flex items-center gap-3 flex-shrink-0">
+        <img src="assets/ctd_logo.png" class="h-11 w-auto" alt="CTD" />
+      </a>
+
+      <ul class="hidden lg:flex items-center list-none gap-8 h-[72px]">
+        <li>
+          <a
+            href="index.html"
+            class="nav-link font-body text-[.85rem] font-medium text-ink/75 h-[72px] flex items-center"
+            data-fr="Accueil"
+            data-en="Home"
+            >Accueil</a
+          >
+        </li>
+        <li>
+          <a
+            href="programmes.html"
+            class="nav-link active font-body text-[.85rem] font-medium text-ink h-[72px] flex items-center"
+            data-fr="Programmes"
+            data-en="Programs"
+            >Programmes</a
+          >
+        </li>
+        <li>
+          <a
+            href="inscription.html"
+            class="nav-link font-body text-[.85rem] font-medium text-ink/75 h-[72px] flex items-center"
+            data-fr="Inscription"
+            data-en="Admissions"
+            >Inscription</a
+          >
+        </li>
+        <li>
+          <a
+            href="contact.html"
+            class="nav-link font-body text-[.85rem] font-medium text-ink/75 h-[72px] flex items-center"
+            data-fr="Contact"
+            data-en="Contact"
+            >Contact</a
+          >
+        </li>
+      </ul>
+
+      <div class="flex items-center gap-3">
+        <div
+          class="flex rounded-full overflow-hidden border border-ink/15 bg-white/60"
+        >
+          <button
+            onclick="setLang('fr')"
+            class="lang-btn active font-mono text-[.65rem] font-semibold tracking-[.05em] px-3 py-1.5 text-ink/55 bg-transparent border-none cursor-pointer"
+          >
+            FR
+          </button>
+          <button
+            onclick="setLang('en')"
+            class="lang-btn font-mono text-[.65rem] font-semibold tracking-[.05em] px-3 py-1.5 text-ink/55 bg-transparent border-none cursor-pointer"
+          >
+            EN
+          </button>
+        </div>
+        <a
+          href="connexion.html"
+          class="hidden sm:inline-block font-body text-[.8rem] font-semibold px-4 py-2 border border-purple-500 text-purple-500 rounded-full hover:bg-purple-500 hover:text-white transition-colors duration-200"
+          data-fr="Connexion"
+          data-en="Login"
+          >Connexion</a
+        >
+        <button
+          onclick="toggleMenu()"
+          class="lg:hidden flex flex-col gap-[5px] p-1 bg-transparent border-none cursor-pointer"
+          aria-label="Menu"
+        >
+          <span class="block w-5 h-[2px] bg-ink rounded"></span>
+          <span class="block w-5 h-[2px] bg-ink rounded"></span>
+          <span class="block w-5 h-[2px] bg-ink rounded"></span>
+        </button>
+      </div>
+    </nav>
+
+    <div
+      id="mobileMenu"
+      class="hidden lg:hidden bg-parchment border-t border-ink/10 z-30 relative"
+    >
+      <a
+        href="index.html"
+        class="block font-body text-sm text-ink/75 px-6 py-3 border-b border-ink/8"
+        data-fr="Accueil"
+        data-en="Home"
+        >Accueil</a
+      >
+      <a
+        href="programmes.html"
+        class="block font-body text-sm text-ink px-6 py-3 border-b border-ink/8"
+        data-fr="Programmes"
+        data-en="Programs"
+        >Programmes</a
+      >
+      <a
+        href="inscription.html"
+        class="block font-body text-sm text-ink/75 px-6 py-3 border-b border-ink/8"
+        data-fr="Inscription"
+        data-en="Admissions"
+        >Inscription</a
+      >
+      <a
+        href="contact.html"
+        class="block font-body text-sm text-ink/75 px-6 py-3 border-b border-ink/8"
+        data-fr="Contact"
+        data-en="Contact"
+        >Contact</a
+      >
+      <a
+        href="connexion.html"
+        class="block font-body text-sm text-purple-500 font-semibold px-6 py-3"
+        data-fr="Connexion"
+        data-en="Login"
+        >Connexion</a
+      >
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════ -->
+    <section class="bg-paper-texture pt-16 pb-14 px-6">
+      <div class="max-w-5xl mx-auto text-center">
+        <div class="flex items-center gap-2 mb-6 justify-center">
+          <span class="block w-8 h-px bg-amber"></span>
+          <span
+            class="eyebrow text-[.68rem] text-amber-dark"
+            data-fr="NOS PROGRAMMES"
+            data-en="OUR PROGRAMS"
+            >NOS PROGRAMMES</span
+          >
+          <span class="block w-8 h-px bg-amber"></span>
+        </div>
+        <h1
+          class="font-display font-medium leading-[1.1] mb-5"
+          style="font-size: clamp(2.2rem, 4.6vw, 3.8rem)"
+        >
+          <span data-fr="Trois parcours, pensés pour" data-en="Three tracks, designed for">
+            Trois parcours, pensés pour</span
+          ><br />
+          <em class="italic text-purple-500" data-fr="ceux qui servent déjà." data-en="those already serving.">
+            ceux qui servent déjà.</em
+          >
+        </h1>
+        <p
+          class="text-ink/70 leading-relaxed max-w-2xl mx-auto mb-2"
+          style="font-size: 0.96rem"
+          data-fr="Ce pôle propose plusieurs programmes académiques et ministériels conçus pour répondre aux besoins des responsables d'Églises, enseignants, missionnaires et leaders chrétiens de l'Afrique francophone et de la diaspora."
+          data-en="This pole offers several academic and ministerial programs designed to meet the needs of church leaders, teachers, missionaries and Christian leaders across francophone Africa and the diaspora."
+        >
+          Ce pôle propose plusieurs programmes académiques et ministériels
+          conçus pour répondre aux besoins des responsables d'Églises,
+          enseignants, missionnaires et leaders chrétiens de l'Afrique
+          francophone et de la diaspora.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       PROGRAM SWITCHER TABS
+  ═══════════════════════════════════════ -->
+    <div class="sticky top-[72px] z-30 bg-parchment/95 backdrop-blur border-b border-ink/10">
+      <div
+        class="max-w-5xl mx-auto flex items-center justify-center gap-8 px-6 overflow-x-auto"
+      >
+        <button
+          onclick="showProg('licence')"
+          data-tab="licence"
+          class="prog-tab active font-body text-[.82rem] sm:text-[.88rem] font-semibold text-purple-500 py-4 whitespace-nowrap"
+          data-fr="Licence en Théologie"
+          data-en="Bachelor's in Theology"
+        >
+          Licence en Théologie
+        </button>
+        <button
+          onclick="showProg('master')"
+          data-tab="master"
+          class="prog-tab font-body text-[.82rem] sm:text-[.88rem] font-semibold text-ink/55 py-4 whitespace-nowrap"
+          data-fr="Master 2 Professionnel"
+          data-en="Professional Master's"
+        >
+          Master 2 Professionnel
+        </button>
+        <button
+          onclick="showProg('continue')"
+          data-tab="continue"
+          class="prog-tab font-body text-[.82rem] sm:text-[.88rem] font-semibold text-ink/55 py-4 whitespace-nowrap"
+          data-fr="Formation continue"
+          data-en="Continuing Education"
+        >
+          Formation continue
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       LICENCE PANEL
+  ═══════════════════════════════════════ -->
+    <section id="licence" class="prog-panel active py-20 px-6">
+      <div class="max-w-5xl mx-auto">
+        <div
+          class="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-start mb-16"
+        >
+          <div class="reveal">
+            <div
+              class="font-mono text-[.68rem] text-azure-500 mb-4 tracking-[.1em]"
+            >
+              01 — 3 ANS · LICENCE
+            </div>
+            <h2
+              class="font-display font-medium leading-[1.15] mb-5"
+              style="font-size: clamp(1.9rem, 3.2vw, 2.6rem)"
+              data-fr="Licence en Théologie à distance"
+              data-en="Distance Bachelor's in Theology"
+            >
+              Licence en Théologie à distance
+            </h2>
+            <a
+              href="inscription.html"
+              class="inline-flex items-center gap-2 font-body text-[.85rem] font-bold px-7 py-3 bg-purple-500 text-white rounded-full hover:bg-purple-700 transition-colors"
+              data-fr="Candidater à ce programme →"
+              data-en="Apply to this program →"
+              >Candidater à ce programme →</a
+            >
+          </div>
+          <div class="reveal" style="transition-delay: 0.08s">
+            <p
+              class="text-ink/75 leading-[1.85]"
+              style="font-size: 0.95rem"
+              data-fr="La Licence en théologie à distance est une formation universitaire de premier cycle destinée à offrir une base solide en disciplines bibliques, théologiques, pastorales et missionnaires. La formation prend trois (3) années académiques."
+              data-en="The distance Bachelor's in Theology is an undergraduate program designed to provide a solid foundation in biblical, theological, pastoral and missionary disciplines. The program runs over three (3) academic years."
+            >
+              La Licence en théologie à distance est une formation
+              universitaire de premier cycle destinée à offrir une base
+              solide en disciplines bibliques, théologiques, pastorales et
+              missionnaires. La formation prend trois (3) années
+              académiques.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-16">
+          <!-- Curriculum -->
+          <div class="reveal">
+            <h3
+              class="font-display font-medium text-lg mb-4"
+              data-fr="Le programme couvre"
+              data-en="The program covers"
+            >
+              Le programme couvre
+            </h3>
+            <ul class="space-y-2.5 text-ink/75" style="font-size: 0.88rem">
+              <li class="check-li" data-fr="Ancien Testament" data-en="Old Testament">Ancien Testament</li>
+              <li class="check-li" data-fr="Nouveau Testament" data-en="New Testament">Nouveau Testament</li>
+              <li class="check-li" data-fr="Théologie systématique" data-en="Systematic Theology">Théologie systématique</li>
+              <li class="check-li" data-fr="Histoire de l'Église" data-en="Church History">Histoire de l'Église</li>
+              <li class="check-li" data-fr="Éthique chrétienne" data-en="Christian Ethics">Éthique chrétienne</li>
+              <li class="check-li" data-fr="Apologétique" data-en="Apologetics">Apologétique</li>
+              <li class="check-li" data-fr="Missiologie" data-en="Missiology">Missiologie</li>
+              <li class="check-li" data-fr="Leadership et ministère pastoral" data-en="Leadership and pastoral ministry">Leadership et ministère pastoral</li>
+            </ul>
+          </div>
+
+          <!-- Goals -->
+          <div class="reveal" style="transition-delay: 0.06s">
+            <h3
+              class="font-display font-medium text-lg mb-4"
+              data-fr="Objectifs"
+              data-en="Goals"
+            >
+              Objectifs
+            </h3>
+            <ul class="space-y-2.5 text-ink/75" style="font-size: 0.88rem">
+              <li class="check-li" data-fr="Former des leaders enracinés dans les Écritures" data-en="Train leaders rooted in Scripture">Former des leaders enracinés dans les Écritures</li>
+              <li class="check-li" data-fr="Développer une compréhension théologique rigoureuse" data-en="Develop rigorous theological understanding">Développer une compréhension théologique rigoureuse</li>
+              <li class="check-li" data-fr="Équiper des serviteurs capables de répondre aux défis de l'Église contemporaine" data-en="Equip servants able to meet the challenges of the contemporary Church">Équiper des serviteurs capables de répondre aux défis de l'Église contemporaine</li>
+              <li class="check-li" data-fr="Préparer à un ministère pastoral, missionnaire ou académique" data-en="Prepare for pastoral, missionary or academic ministry">Préparer à un ministère pastoral, missionnaire ou académique</li>
+            </ul>
+          </div>
+
+          <!-- Format -->
+          <div class="reveal" style="transition-delay: 0.12s">
+            <h3
+              class="font-display font-medium text-lg mb-4"
+              data-fr="L'étudiant bénéficie de"
+              data-en="Students receive"
+            >
+              L'étudiant bénéficie de
+            </h3>
+            <ul class="space-y-2.5 text-ink/75" style="font-size: 0.88rem">
+              <li class="check-li" data-fr="Cours en format audio et vidéo sur la plateforme" data-en="Audio and video courses on the platform">Cours en format audio et vidéo sur la plateforme</li>
+              <li class="check-li" data-fr="Lectures académiques guidées" data-en="Guided academic readings">Lectures académiques guidées</li>
+              <li class="check-li" data-fr="Forums d'échange avec enseignants et étudiants" data-en="Discussion forums with teachers and students">Forums d'échange avec enseignants et étudiants</li>
+              <li class="check-li" data-fr="Travaux dirigés et recherches" data-en="Supervised assignments and research">Travaux dirigés et recherches</li>
+              <li class="check-li" data-fr="Évaluations continues et examens" data-en="Continuous assessments and exams">Évaluations continues et examens</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Who it's for -->
+        <div class="bg-purple-50/60 rounded-2xl p-8 reveal">
+          <h3
+            class="font-display font-medium text-lg mb-5"
+            data-fr="Ce programme s'adresse particulièrement aux"
+            data-en="This program is particularly intended for"
+          >
+            Ce programme s'adresse particulièrement aux
+          </h3>
+          <div class="flex flex-wrap gap-3">
+            <span class="px-4 py-2 bg-white rounded-full text-ink/75 border border-ink/10" style="font-size: 0.85rem" data-fr="Pasteurs et responsables d'Églises" data-en="Pastors and church leaders">Pasteurs et responsables d'Églises</span>
+            <span class="px-4 py-2 bg-white rounded-full text-ink/75 border border-ink/10" style="font-size: 0.85rem" data-fr="Missionnaires et implanteurs d'Églises" data-en="Missionaries and church planters">Missionnaires et implanteurs d'Églises</span>
+            <span class="px-4 py-2 bg-white rounded-full text-ink/75 border border-ink/10" style="font-size: 0.85rem" data-fr="Enseignants bibliques" data-en="Bible teachers">Enseignants bibliques</span>
+            <span class="px-4 py-2 bg-white rounded-full text-ink/75 border border-ink/10" style="font-size: 0.85rem" data-fr="Responsables de ministères" data-en="Ministry leaders">Responsables de ministères</span>
+            <span class="px-4 py-2 bg-white rounded-full text-ink/75 border border-ink/10" style="font-size: 0.85rem" data-fr="Jeunes leaders appelés au service chrétien" data-en="Young leaders called to Christian service">Jeunes leaders appelés au service chrétien</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       MASTER PANEL
+  ═══════════════════════════════════════ -->
+    <section id="master" class="prog-panel py-20 px-6 bg-azure-50/40">
+      <div class="max-w-5xl mx-auto">
+        <div
+          class="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-start mb-14"
+        >
+          <div class="reveal">
+            <div
+              class="font-mono text-[.68rem] text-azure-500 mb-4 tracking-[.1em]"
+            >
+              02 — 2 ANS · MASTER
+            </div>
+            <h2
+              class="font-display font-medium leading-[1.15] mb-5"
+              style="font-size: clamp(1.9rem, 3.2vw, 2.6rem)"
+              data-fr="Master 2 Professionnel à distance"
+              data-en="Distance Professional Master's"
+            >
+              Master 2 Professionnel à distance
+            </h2>
+            <a
+              href="inscription.html"
+              class="inline-flex items-center gap-2 font-body text-[.85rem] font-bold px-7 py-3 bg-azure-500 text-white rounded-full hover:bg-azure-700 transition-colors"
+              data-fr="Candidater à ce programme →"
+              data-en="Apply to this program →"
+              >Candidater à ce programme →</a
+            >
+          </div>
+          <div class="reveal" style="transition-delay: 0.08s">
+            <p
+              class="text-ink/75 leading-[1.85]"
+              style="font-size: 0.95rem"
+              data-fr="Notre programme de Master 2 Professionnel à distance en Théologie et Missiologie est conçu pour former des leaders capables de répondre avec profondeur théologique, maturité pastorale et intelligence missionnaire aux défis de l'Église contemporaine. C'est une formation de deuxième cycle orientée vers l'approfondissement académique, la réflexion stratégique et l'application ministérielle."
+              data-en="Our distance Professional Master's program in Theology and Missiology is designed to train leaders able to respond with theological depth, pastoral maturity and missionary insight to the challenges of the contemporary Church. It is a graduate program oriented toward academic depth, strategic thinking and ministerial application."
+            >
+              Notre programme de Master 2 Professionnel à distance en
+              Théologie et Missiologie est conçu pour former des leaders
+              capables de répondre avec profondeur théologique, maturité
+              pastorale et intelligence missionnaire aux défis de l'Église
+              contemporaine. C'est une formation de deuxième cycle orientée
+              vers l'approfondissement académique, la réflexion stratégique
+              et l'application ministérielle.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tronc commun -->
+        <div class="mb-14 reveal">
+          <div class="flex items-center gap-2 mb-5">
+            <span class="block w-7 h-px bg-amber"></span>
+            <span
+              class="eyebrow text-[.66rem] text-amber-dark"
+              data-fr="TRONC COMMUN · 2 ANS"
+              data-en="CORE CURRICULUM · 2 YEARS"
+              >TRONC COMMUN · 2 ANS</span
+            >
+          </div>
+          <p
+            class="text-ink/70 leading-[1.8] mb-6 max-w-3xl"
+            style="font-size: 0.9rem"
+            data-fr="Se déroulant sur deux années académiques, ce programme permet aux étudiants de consolider leurs fondements théologiques, missiologiques et méthodologiques."
+            data-en="Spanning two academic years, this program allows students to consolidate their theological, missiological and methodological foundations."
+          >
+            Se déroulant sur deux années académiques, ce programme permet
+            aux étudiants de consolider leurs fondements théologiques,
+            missiologiques et méthodologiques.
+          </p>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="bg-white rounded-xl p-4 border border-ink/8" style="font-size: 0.82rem">
+              <span data-fr="Méthodologie de recherche" data-en="Research methodology">Méthodologie de recherche</span>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-ink/8" style="font-size: 0.82rem">
+              <span data-fr="Théologie biblique avancée" data-en="Advanced biblical theology">Théologie biblique avancée</span>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-ink/8" style="font-size: 0.82rem">
+              <span data-fr="Théologie systématique contemporaine" data-en="Contemporary systematic theology">Théologie systématique contemporaine</span>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-ink/8" style="font-size: 0.82rem">
+              <span data-fr="Missiologie et dynamique missionnaire" data-en="Missiology and missionary dynamics">Missiologie et dynamique missionnaire</span>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-ink/8" style="font-size: 0.82rem">
+              <span data-fr="Leadership et gouvernance ecclésiale" data-en="Leadership and church governance">Leadership et gouvernance ecclésiale</span>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-ink/8" style="font-size: 0.82rem">
+              <span data-fr="Analyse des contextes africains et francophones" data-en="Analysis of African and francophone contexts">Analyse des contextes africains et francophones</span>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-ink/8" style="font-size: 0.82rem">
+              <span data-fr="Église, culture et société" data-en="Church, culture and society">Église, culture et société</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Specializations toggle -->
+        <div class="mb-10 reveal">
+          <div class="flex items-center gap-2 mb-5">
+            <span class="block w-7 h-px bg-amber"></span>
+            <span
+              class="eyebrow text-[.66rem] text-amber-dark"
+              data-fr="2E ANNÉE · CHOISISSEZ VOTRE SPÉCIALISATION"
+              data-en="YEAR 2 · CHOOSE YOUR SPECIALIZATION"
+              >2E ANNÉE · CHOISISSEZ VOTRE SPÉCIALISATION</span
+            >
+          </div>
+          <p
+            class="text-ink/70 leading-[1.8] mb-6 max-w-3xl"
+            style="font-size: 0.9rem"
+            data-fr="La deuxième année offre des cours de spécialisation. L'étudiant choisit l'une des deux options professionnelles."
+            data-en="The second year offers specialization courses. Students choose one of two professional tracks."
+          >
+            La deuxième année offre des cours de spécialisation. L'étudiant
+            choisit l'une des deux options professionnelles.
+          </p>
+
+          <div class="flex gap-3 mb-6">
+            <button
+              onclick="showSpec('pastorale')"
+              data-spec="pastorale"
+              class="spec-toggle active font-body text-[.82rem] font-semibold px-6 py-2.5 rounded-full border border-purple-500 text-purple-500"
+              data-fr="Théologie pastorale"
+              data-en="Pastoral Theology"
+            >
+              Théologie pastorale
+            </button>
+            <button
+              onclick="showSpec('implantation')"
+              data-spec="implantation"
+              class="spec-toggle font-body text-[.82rem] font-semibold px-6 py-2.5 rounded-full border border-purple-500 text-purple-500"
+              data-fr="Implantation d'Églises"
+              data-en="Church Planting"
+            >
+              Implantation d'Églises
+            </button>
+          </div>
+
+          <div id="spec-pastorale" class="spec-panel active bg-white rounded-2xl p-8 border border-ink/8">
+            <p
+              class="text-ink/75 leading-[1.8] mb-5"
+              style="font-size: 0.9rem"
+              data-fr="C'est un parcours orienté vers le développement du ministère pastoral et de la conduite de l'Église."
+              data-en="This track is oriented toward developing pastoral ministry and church leadership."
+            >
+              C'est un parcours orienté vers le développement du ministère
+              pastoral et de la conduite de l'Église.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div class="check-li text-ink/75" style="font-size: 0.86rem" data-fr="Théologie du ministère pastoral" data-en="Theology of pastoral ministry">Théologie du ministère pastoral</div>
+              <div class="check-li text-ink/75" style="font-size: 0.86rem" data-fr="Prédication et communication biblique" data-en="Preaching and biblical communication">Prédication et communication biblique</div>
+              <div class="check-li text-ink/75" style="font-size: 0.86rem" data-fr="Accompagnement pastoral" data-en="Pastoral counseling">Accompagnement pastoral</div>
+              <div class="check-li text-ink/75" style="font-size: 0.86rem" data-fr="Mentorat et formation des leaders" data-en="Mentoring and leadership training">Mentorat et formation des leaders</div>
+              <div class="check-li text-ink/75" style="font-size: 0.86rem" data-fr="Gestion des conflits et santé du leadership" data-en="Conflict management and leadership health">Gestion des conflits et santé du leadership</div>
+              <div class="check-li text-ink/75" style="font-size: 0.86rem" data-fr="Développement des ministères locaux" data-en="Local ministry development">Développement des ministères locaux</div>
+            </div>
+          </div>
+
+          <div id="spec-implantation" class="spec-panel bg-white rounded-2xl p-8 border border-ink/8">
+            <p
+              class="text-ink/75 leading-[1.8] mb-5"
+              style="font-size: 0.9rem"
+              data-fr="Ce parcours est orienté vers la mission, l'évangélisation stratégique et le développement de nouvelles communautés chrétiennes."
+              data-en="This track is oriented toward mission, strategic evangelism and the development of new Christian communities."
+            >
+              Ce parcours est orienté vers la mission, l'évangélisation
+              stratégique et le développement de nouvelles communautés
+              chrétiennes.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div class="check-li text-ink/75" style="font-size: 0.86rem" data-fr="Théologie de l'implantation d'Églises" data-en="Theology of church planting">Théologie de l'implantation d'Églises</div>
+              <div class="check-li text-ink/75" style="font-size: 0.86rem" data-fr="Analyse missionnelle des contextes" data-en="Missional analysis of contexts">Analyse missionnelle des contextes</div>
+              <div class="check-li text-ink/75" style="font-size: 0.86rem" data-fr="Stratégies d'évangélisation" data-en="Evangelism strategies">Stratégies d'évangélisation</div>
+              <div class="check-li text-ink/75" style="font-size: 0.86rem" data-fr="Approches de discipolat" data-en="Discipleship approaches">Approches de discipolat</div>
+              <div class="check-li text-ink/75" style="font-size: 0.86rem" data-fr="Leadership pionnier" data-en="Pioneer leadership">Leadership pionnier</div>
+              <div class="check-li text-ink/75" style="font-size: 0.86rem" data-fr="Développement de communautés missionnelles" data-en="Missional community development">Développement de communautés missionnelles</div>
+              <div class="check-li text-ink/75" style="font-size: 0.86rem" data-fr="Accompagnement des implanteurs" data-en="Support for church planters">Accompagnement des implanteurs</div>
+            </div>
+          </div>
+        </div>
+
+        <p
+          class="text-ink/65 leading-[1.8] italic mb-14 max-w-3xl reveal"
+          style="font-size: 0.88rem"
+          data-fr="Chaque étudiant termine son parcours par un projet professionnel appliqué, un mémoire ministériel ou une recherche-action contextualisée, conformément à son option ou sa spécialisation."
+          data-en="Each student completes their track with an applied professional project, a ministerial thesis, or contextualized action research, in line with their track or specialization."
+        >
+          Chaque étudiant termine son parcours par un projet professionnel
+          appliqué, un mémoire ministériel ou une recherche-action
+          contextualisée, conformément à son option ou sa spécialisation.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+          <div class="reveal">
+            <h3
+              class="font-display font-medium text-lg mb-4"
+              data-fr="Ce programme vise à"
+              data-en="This program aims to"
+            >
+              Ce programme vise à
+            </h3>
+            <ul class="space-y-2.5 text-ink/75" style="font-size: 0.88rem">
+              <li class="check-li" data-fr="Former des leaders théologiquement solides et missiologiquement stratégiques" data-en="Train leaders who are theologically solid and missiologically strategic">Former des leaders théologiquement solides et missiologiquement stratégiques</li>
+              <li class="check-li" data-fr="Répondre aux besoins croissants de formation avancée dans l'Église francophone" data-en="Meet the growing need for advanced training in the francophone Church">Répondre aux besoins croissants de formation avancée dans l'Église francophone</li>
+              <li class="check-li" data-fr="Développer une réflexion théologique contextualisée pour l'Afrique et la diaspora" data-en="Develop contextualized theological reflection for Africa and the diaspora">Développer une réflexion théologique contextualisée pour l'Afrique et la diaspora</li>
+              <li class="check-li" data-fr="Préparer des responsables capables de former, conduire et multiplier des communautés chrétiennes" data-en="Prepare leaders able to train, lead and multiply Christian communities">Préparer des responsables capables de former, conduire et multiplier des communautés chrétiennes</li>
+              <li class="check-li" data-fr="Renforcer les capacités de leadership pastoral et missionnaire" data-en="Strengthen pastoral and missionary leadership capacities">Renforcer les capacités de leadership pastoral et missionnaire</li>
+            </ul>
+          </div>
+          <div class="reveal" style="transition-delay: 0.06s">
+            <h3
+              class="font-display font-medium text-lg mb-4"
+              data-fr="L'étudiant bénéficie de"
+              data-en="Students receive"
+            >
+              L'étudiant bénéficie de
+            </h3>
+            <ul class="space-y-2.5 text-ink/75" style="font-size: 0.88rem">
+              <li class="check-li" data-fr="Cours et ressources académiques en ligne" data-en="Online courses and academic resources">Cours et ressources académiques en ligne</li>
+              <li class="check-li" data-fr="Classes virtuelles interactives" data-en="Interactive virtual classes">Classes virtuelles interactives</li>
+              <li class="check-li" data-fr="Lectures dirigées" data-en="Directed readings">Lectures dirigées</li>
+              <li class="check-li" data-fr="Travaux de recherche et études de cas" data-en="Research work and case studies">Travaux de recherche et études de cas</li>
+              <li class="check-li" data-fr="Accompagnement académique et ministériel personnalisé" data-en="Personalized academic and ministerial support">Accompagnement académique et ministériel personnalisé</li>
+              <li class="check-li" data-fr="Encadrement du projet professionnel final" data-en="Supervision of the final professional project">Encadrement du projet professionnel final</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       FORMATION CONTINUE PANEL
+  ═══════════════════════════════════════ -->
+    <section id="continue" class="prog-panel py-20 px-6">
+      <div class="max-w-5xl mx-auto">
+        <div
+          class="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-start mb-14"
+        >
+          <div class="reveal">
+            <div
+              class="font-mono text-[.68rem] text-azure-500 mb-4 tracking-[.1em]"
+            >
+              03 — MODULAIRE
+            </div>
+            <h2
+              class="font-display font-medium leading-[1.15] mb-5"
+              style="font-size: clamp(1.9rem, 3.2vw, 2.6rem)"
+              data-fr="Formation continue à distance"
+              data-en="Distance Continuing Education"
+            >
+              Formation continue à distance
+            </h2>
+            <a
+              href="inscription.html"
+              class="inline-flex items-center gap-2 font-body text-[.85rem] font-bold px-7 py-3 bg-amber text-white rounded-full hover:bg-amber-dark transition-colors"
+              data-fr="Candidater à ce programme →"
+              data-en="Apply to this program →"
+              >Candidater à ce programme →</a
+            >
+          </div>
+          <div class="reveal" style="transition-delay: 0.08s">
+            <p
+              class="text-ink/75 leading-[1.85]"
+              style="font-size: 0.95rem"
+              data-fr="Notre programme de formation continue à distance offre plusieurs séries de cours modulaires, pratiques, spécialisés et certifiés destinés à répondre à des besoins précis dans le ministère et le leadership chrétien."
+              data-en="Our distance continuing education program offers several series of modular, practical, specialized and certified courses designed to meet specific needs in ministry and Christian leadership."
+            >
+              Notre programme de formation continue à distance offre
+              plusieurs séries de cours modulaires, pratiques, spécialisés
+              et certifiés destinés à répondre à des besoins précis dans le
+              ministère et le leadership chrétien.
+            </p>
+          </div>
+        </div>
+
+        <!-- Module cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14">
+          <div class="bg-white rounded-2xl p-8 border border-ink/8 reveal">
+            <div class="text-2xl mb-4">🩹</div>
+            <h3
+              class="font-display font-medium text-lg mb-3 leading-snug"
+              data-fr="Accompagnement pastoral et guérison de traumatisme"
+              data-en="Pastoral care and trauma healing"
+            >
+              Accompagnement pastoral et guérison de traumatisme
+            </h3>
+            <p
+              class="text-ink/70 leading-[1.75]"
+              style="font-size: 0.88rem"
+              data-fr="Formation modulaire continue pour les leaders qui accompagnent des personnes en souffrance dans leur communauté."
+              data-en="Ongoing modular training for leaders who support people in distress within their community."
+            >
+              Formation modulaire continue pour les leaders qui accompagnent
+              des personnes en souffrance dans leur communauté.
+            </p>
+          </div>
+          <div class="bg-white rounded-2xl p-8 border border-ink/8 reveal" style="transition-delay: 0.06s">
+            <div class="text-2xl mb-4">☪️</div>
+            <h3
+              class="font-display font-medium text-lg mb-3 leading-snug"
+              data-fr="Islamologie appliquée"
+              data-en="Applied Islamology"
+            >
+              Islamologie appliquée
+            </h3>
+            <p
+              class="text-ink/70 leading-[1.75]"
+              style="font-size: 0.88rem"
+              data-fr="Une formation pour comprendre l'islam et dialoguer avec sagesse dans des contextes multireligieux."
+              data-en="Training to understand Islam and engage in dialogue wisely in multi-religious contexts."
+            >
+              Une formation pour comprendre l'islam et dialoguer avec
+              sagesse dans des contextes multireligieux.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-16">
+          <div class="reveal">
+            <h3
+              class="font-display font-medium text-lg mb-4"
+              data-fr="Ces modules permettent de"
+              data-en="These modules help to"
+            >
+              Ces modules permettent de
+            </h3>
+            <ul class="space-y-2.5 text-ink/75" style="font-size: 0.88rem">
+              <li class="check-li" data-fr="Renforcer des compétences spécifiques" data-en="Strengthen specific skills">Renforcer des compétences spécifiques</li>
+              <li class="check-li" data-fr="Répondre à des défis concrets du ministère" data-en="Address concrete ministry challenges">Répondre à des défis concrets du ministère</li>
+              <li class="check-li" data-fr="Actualiser ses connaissances théologiques et missiologiques" data-en="Update theological and missiological knowledge">Actualiser ses connaissances théologiques et missiologiques</li>
+              <li class="check-li" data-fr="Continuer à apprendre tout en restant engagé sur le terrain" data-en="Keep learning while staying engaged in the field">Continuer à apprendre tout en restant engagé sur le terrain</li>
+            </ul>
+          </div>
+          <div class="reveal" style="transition-delay: 0.06s">
+            <h3
+              class="font-display font-medium text-lg mb-4"
+              data-fr="Format des cours"
+              data-en="Course format"
+            >
+              Format des cours
+            </h3>
+            <ul class="space-y-2.5 text-ink/75" style="font-size: 0.88rem">
+              <li class="check-li" data-fr="Cours vidéo" data-en="Video courses">Cours vidéo</li>
+              <li class="check-li" data-fr="Webinaires interactifs" data-en="Interactive webinars">Webinaires interactifs</li>
+              <li class="check-li" data-fr="Documents pédagogiques" data-en="Teaching materials">Documents pédagogiques</li>
+              <li class="check-li" data-fr="Exercices pratiques" data-en="Practical exercises">Exercices pratiques</li>
+              <li class="check-li" data-fr="Sessions de mentorat" data-en="Mentoring sessions">Sessions de mentorat</li>
+            </ul>
+          </div>
+          <div class="reveal" style="transition-delay: 0.12s">
+            <h3
+              class="font-display font-medium text-lg mb-4"
+              data-fr="Adaptées aux"
+              data-en="Suited for"
+            >
+              Adaptées aux
+            </h3>
+            <ul class="space-y-2.5 text-ink/75" style="font-size: 0.88rem">
+              <li class="check-li" data-fr="Pasteurs en activité" data-en="Active pastors">Pasteurs en activité</li>
+              <li class="check-li" data-fr="Responsables de ministères" data-en="Ministry leaders">Responsables de ministères</li>
+              <li class="check-li" data-fr="Missionnaires" data-en="Missionaries">Missionnaires</li>
+              <li class="check-li" data-fr="Anciens, diacres et responsables de jeunesse" data-en="Elders, deacons and youth leaders">Anciens, diacres et responsables de jeunesse</li>
+              <li class="check-li" data-fr="Tout chrétien désirant servir comme leader laïc" data-en="Any Christian wishing to serve as a lay leader">Tout chrétien désirant servir comme leader laïc</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="stitch-divider max-w-6xl mx-auto"></div>
+
+    <!-- ═══════════════════════════════════════
+       CTA FINAL
+  ═══════════════════════════════════════ -->
+    <section class="py-24 px-6 bg-paper-texture">
+      <div class="max-w-4xl mx-auto text-center reveal">
+        <h2
+          class="font-display font-medium leading-[1.15] mb-5"
+          style="font-size: clamp(2rem, 3.6vw, 3.1rem)"
+        >
+          <span data-fr="Prêt à choisir votre" data-en="Ready to choose your">
+            Prêt à choisir votre</span
+          ><br />
+          <em class="italic text-purple-500" data-fr="parcours de formation ?" data-en="training path?">
+            parcours de formation ?</em
+          >
+        </h2>
+        <p
+          class="text-ink/70 leading-relaxed mb-9 max-w-xl mx-auto"
+          style="font-size: 0.96rem"
+          data-fr="Merci de votre intérêt pour le PCTD. Nos formations sont ouvertes aux pasteurs, responsables d'Églises, missionnaires, enseignants bibliques et toute personne appelée à servir."
+          data-en="Thank you for your interest in PCTD. Our programs are open to pastors, church leaders, missionaries, Bible teachers and anyone called to serve."
+        >
+          Merci de votre intérêt pour le PCTD. Nos formations sont ouvertes
+          aux pasteurs, responsables d'Églises, missionnaires, enseignants
+          bibliques et toute personne appelée à servir.
+        </p>
+        <div class="flex gap-3 justify-center flex-wrap">
+          <a
+            href="inscription.html"
+            class="font-body text-[.85rem] font-bold px-8 py-3.5 bg-purple-500 text-white rounded-full hover:bg-purple-700 transition-colors duration-300"
+            data-fr="Voir les conditions d'inscription"
+            data-en="View admission requirements"
+            >Voir les conditions d'inscription</a
+          >
+          <a
+            href="contact.html"
+            class="font-body text-[.85rem] font-semibold px-8 py-3.5 border border-ink/25 text-ink rounded-full hover:border-ink/50 transition-colors duration-300"
+            data-fr="Poser une question"
+            data-en="Ask a question"
+            >Poser une question</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════ -->
+    <footer class="bg-purple-900 text-parchment/70 px-6 pt-16 pb-8">
+      <div class="max-w-6xl mx-auto">
+        <div
+          class="grid grid-cols-1 md:grid-cols-[1.3fr_1fr_1fr_1fr] gap-10 pb-12"
+        >
+          <div>
+            <img
+              src="assets/ctd_logo.png"
+              class="h-10 w-auto mb-4 brightness-0 invert opacity-90"
+              alt="CTD"
+            />
+            <p
+              class="leading-relaxed max-w-xs"
+              style="font-size: 0.85rem"
+              data-fr="Le pôle CTD forme des serviteurs de Dieu pour une Église solide, fidèle aux Écritures et engagée dans la mission."
+              data-en="The CTD pole trains servants of God for a Church that is strong, faithful to Scripture and engaged in mission."
+            >
+              Le pôle CTD forme des serviteurs de Dieu pour une Église
+              solide, fidèle aux Écritures et engagée dans la mission.
+            </p>
+          </div>
+          <div>
+            <div
+              class="eyebrow text-[.65rem] text-parchment/40 mb-4"
+              data-fr="NAVIGATION"
+              data-en="NAVIGATION"
+            >
+              NAVIGATION
+            </div>
+            <ul class="space-y-2.5" style="font-size: 0.85rem">
+              <li><a href="index.html" class="hover:text-amber-light" data-fr="Accueil" data-en="Home">Accueil</a></li>
+              <li><a href="programmes.html" class="hover:text-amber-light" data-fr="Programmes" data-en="Programs">Programmes</a></li>
+              <li><a href="inscription.html" class="hover:text-amber-light" data-fr="Inscription" data-en="Admissions">Inscription</a></li>
+              <li><a href="contact.html" class="hover:text-amber-light" data-fr="Contact" data-en="Contact">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <div
+              class="eyebrow text-[.65rem] text-parchment/40 mb-4"
+              data-fr="ESPACE ÉTUDIANT"
+              data-en="STUDENT SPACE"
+            >
+              ESPACE ÉTUDIANT
+            </div>
+            <ul class="space-y-2.5" style="font-size: 0.85rem">
+              <li><a href="connexion.html" class="hover:text-amber-light" data-fr="Connexion" data-en="Login">Connexion</a></li>
+              <li><a href="paiement.html" class="hover:text-amber-light" data-fr="Paiement" data-en="Payment">Paiement</a></li>
+            </ul>
+          </div>
+          <div>
+            <div
+              class="eyebrow text-[.65rem] text-parchment/40 mb-4"
+              data-fr="CONTACT"
+              data-en="CONTACT"
+            >
+              CONTACT
+            </div>
+            <ul class="space-y-2.5" style="font-size: 0.85rem">
+              <li>B.P. 701 Ngaoundéré, Adamaoua</li>
+              <li>contact@pctd.net</li>
+              <li>www.pctd.net</li>
+            </ul>
+          </div>
+        </div>
+
+        <div
+          class="border-t border-white/10 pt-8 pb-2 flex flex-col md:flex-row items-center justify-between gap-6"
+        >
+          <div
+            class="eyebrow text-[.62rem] text-parchment/35"
+            data-fr="EN PARTENARIAT AVEC"
+            data-en="IN PARTNERSHIP WITH"
+          >
+            EN PARTENARIAT AVEC
+          </div>
+          <div class="flex items-center gap-6 flex-wrap justify-center">
+            <span class="font-display text-lg text-parchment/60">FATECAM</span>
+            <span class="font-display text-lg text-parchment/60">AEC</span>
+            <span class="font-display text-lg text-parchment/60">WAM</span>
+            <span class="font-display text-lg text-parchment/60">FJC</span>
+          </div>
+        </div>
+
+        <div
+          class="text-center pt-6 font-mono text-[.68rem] text-parchment/35"
+        >
+          © 2026 CTD, FATECAM / AEC. Tous droits réservés.
+        </div>
+      </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════
+       SCRIPTS
+  ═══════════════════════════════════════ -->
+    <script>
+      function setLang(l) {
+        document
+          .querySelectorAll(".lang-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector(`.lang-btn[onclick="setLang('${l}')"]`)
+          .classList.add("active");
+        document.querySelectorAll("[data-fr]").forEach((el) => {
+          const txt = el.getAttribute("data-" + l);
+          if (txt) el.textContent = txt;
+        });
+      }
+
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("show");
+              obs.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.12 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+
+      window.addEventListener("scroll", () => {
+        document.getElementById("navbar").style.boxShadow =
+          window.pageYOffset > 60 ? "0 2px 24px rgba(26,21,48,.08)" : "none";
+      });
+
+      function toggleMenu() {
+        document.getElementById("mobileMenu").classList.toggle("hidden");
+      }
+
+      // Program tab switcher
+      function showProg(name) {
+        document.querySelectorAll(".prog-panel").forEach((p) => {
+          p.classList.toggle("active", p.id === name);
+        });
+        document.querySelectorAll(".prog-tab").forEach((t) => {
+          const isActive = t.dataset.tab === name;
+          t.classList.toggle("active", isActive);
+          t.classList.toggle("text-ink/55", !isActive);
+          t.classList.toggle(
+            "text-purple-500",
+            isActive && name === "licence",
+          );
+          t.classList.toggle("text-azure-500", isActive && name === "master");
+          t.classList.toggle("text-amber-dark", isActive && name === "continue");
+        });
+        // re-trigger reveal animations for the newly shown panel
+        document
+          .querySelector(`#${name}`)
+          .querySelectorAll(".reveal")
+          .forEach((el) => {
+            el.classList.remove("show");
+            obs.observe(el);
+          });
+        window.scrollTo({ top: 0, behavior: "instant" });
+        document.querySelector(`[data-tab="${name}"]`).scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
+
+      // Master specialization toggle
+      function showSpec(name) {
+        document.querySelectorAll(".spec-panel").forEach((p) => {
+          p.classList.toggle("active", p.id === `spec-${name}`);
+        });
+        document.querySelectorAll(".spec-toggle").forEach((t) => {
+          t.classList.toggle("active", t.dataset.spec === name);
+        });
+      }
+    </script>
+  </body>
+</html>
